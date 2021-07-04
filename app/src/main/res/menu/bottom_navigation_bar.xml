@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:icon="@drawable/ic_outline_home"
+        />
+    <item
+        android:title="Orders"
+        android:id="@+id/nav_orders"
+        android:icon="@drawable/ic_outline_orders"
+        />
+
+    <item
+        android:title="Add"
+        android:id="@+id/nav_add"
+        android:icon="@drawable/ic_baseline_add"
+        />
+    <item
+        android:title="Client"
+        android:id="@+id/nav_client"
+        android:icon="@drawable/ic_outline_people_24"
+        />
+
+    <item
+        android:title="Profile"
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_outline_perm_identity_24"
+        />
+
+</menu>
