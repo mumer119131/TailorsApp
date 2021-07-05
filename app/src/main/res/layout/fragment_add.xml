@@ -51,7 +51,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Phone Number"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_baseline_local_phone_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPhoneNumber"
@@ -70,7 +70,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Email"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_baseline_email_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
@@ -108,7 +108,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Arm"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_arm_icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etArm"
@@ -127,7 +127,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Chest"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_chest_icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etChest"
@@ -146,7 +146,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Neck"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_neck_icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNeck"
@@ -165,7 +165,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Front Side"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_front_side_icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFrontSide"
@@ -184,7 +184,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Back Side"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_back_side_icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etBackSide"

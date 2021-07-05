@@ -1,9 +1,12 @@
 package com.example.tailorsapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,10 +24,18 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private PieChart pieChart;
+    private TextView userName;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup root= (ViewGroup) inflater.inflate(R.layout.fragment_home,container,false);
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("Name", Context.MODE_PRIVATE);
+        String Name = sharedPreferences.getString("UserName","");
+        userName=root.findViewById(R.id.userNameTV);
+        userName.setText(Name);
+
         pieChart=root.findViewById(R.id.PieChart);
         Description description=new Description();
         description.setText("");

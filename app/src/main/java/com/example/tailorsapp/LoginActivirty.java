@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,12 +19,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivirty extends AppCompatActivity {
     private TextView btnToSignUp;
     private FirebaseAuth mAuth;
+    private FirebaseDatabase firebaseDatabase;
     private Button btnLogin;
     private EditText email,password;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +42,7 @@ public class LoginActivirty extends AppCompatActivity {
         email=findViewById(R.id.etEmail);
         password=findViewById(R.id.etPassword);
         ProgressDialog progressDialog=new ProgressDialog(this);
+        firebaseDatabase=FirebaseDatabase.getInstance();
         
         
         btnToSignUp.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +81,7 @@ public class LoginActivirty extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     startActivity(new Intent(LoginActivirty.this,MainActivity.class));
                                     Toast.makeText(LoginActivirty.this, "Login Successful", Toast.LENGTH_SHORT).show();
-
+                                    getUserName();
                                     finish();
                                 }
                                 else{
@@ -81,6 +90,32 @@ public class LoginActivirty extends AppCompatActivity {
                                 }
                             }
                         });
+            }
+        });
+
+    }
+
+    private void getUserName() {
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("User");
+        reference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name=snapshot.child("name").getValue(String.class);
+                String email=snapshot.child("email").getValue(String.class);
+                sharedPreferences=getSharedPreferences("Name",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("UserName",name);
+                editor.putString("UserEmail",email);
+                editor.apply();
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

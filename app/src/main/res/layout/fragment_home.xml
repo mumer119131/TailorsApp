@@ -26,21 +26,22 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/userNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/roboto"
+            android:fontFamily="@font/alex_brush"
             android:gravity="center"
             android:text="User Name"
             android:textColor="@color/white"
-            android:textSize="45sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:text="Wish You A Good Day"
             android:textColor="@color/white" />
 
