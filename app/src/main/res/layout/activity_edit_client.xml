@@ -19,7 +19,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/roboto_light"
-            android:text="Enter the Fields"
+            android:text="Edit Client"
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout

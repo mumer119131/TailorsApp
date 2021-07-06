@@ -397,6 +397,13 @@
                 android:layout_marginRight="20dp"
                 android:text="Edit" />
 
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Delete" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

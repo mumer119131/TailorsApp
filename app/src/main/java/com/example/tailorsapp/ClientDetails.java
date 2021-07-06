@@ -1,7 +1,10 @@
 package com.example.tailorsapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +24,7 @@ public class ClientDetails extends AppCompatActivity {
     TextView dateTV,phoneTV,armTV,legTV,chestTV,neckTV,frontTV,backTV,clientName,idTV,fatherTV;
     Cursor cursorData;
     ImageView btnBack;
+    Button btnEdit,btnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,8 @@ public class ClientDetails extends AppCompatActivity {
         clientName=findViewById(R.id.clientName);
         idTV=findViewById(R.id.idTV);
         fatherTV = findViewById(R.id.fatherTV);
+        btnEdit = findViewById(R.id.btnEdit);
+        btnDelete=findViewById(R.id.btnDelete);
 
 
         cursorData = fetchData();
@@ -55,9 +61,8 @@ public class ClientDetails extends AppCompatActivity {
         String date="";
         String id="";
         String fatherName = "";
-
-
         String name = "";
+
         if(cursorData != null && cursorData.moveToFirst()) {
             id=cursorData.getString(0);
             name = cursorData.getString(1);
@@ -92,6 +97,61 @@ public class ClientDetails extends AppCompatActivity {
                 finish();
             }
         });
+        String finalName = name;
+        String finalId = id;
+        String finalFatherName = fatherName;
+        String finalLeg = leg;
+        String finalArm = arm;
+        String finalChest = chest;
+        String finalNeck = neck;
+        String finalFront = front;
+        String finalBack = back;
+        String finalPhone = phone;
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(ClientDetails.this,EditClient.class);
+            i.putExtra("Name", finalName);
+            i.putExtra("ID", finalId);
+            i.putExtra("Father", finalFatherName);
+            i.putExtra("leg", finalLeg);
+            i.putExtra("Arm", finalArm);
+            i.putExtra("Chest", finalChest);
+            i.putExtra("Neck", finalNeck);
+            i.putExtra("FRONT", finalFront);
+            i.putExtra("back", finalBack);
+            i.putExtra("Phone", finalPhone);
+            startActivity(i);
+        }
+    });
+        String finalId1 = id;
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ClientDetails.this);
+            builder.setTitle("Delete");
+            builder.setCancelable(false);
+            builder.setMessage("Are you sure to delete the client ?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            DeleteAnitem(finalId1);
+                            Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ClientDetails.this,MainActivity.class));
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+         AlertDialog alertDialog = builder.create();
+         alertDialog.show();
+
+        }
+    });
     }
 
     private Cursor fetchData() {
@@ -100,5 +160,10 @@ public class ClientDetails extends AppCompatActivity {
         Cursor cursor = db.getDatabyID(ID);
 
         return cursor;
+    }
+    private  void DeleteAnitem(String id){
+        DatabaseHelper db = new DatabaseHelper(ClientDetails.this);
+        db.DeleteDataByID(Integer.parseInt(id));
+
     }
 }
