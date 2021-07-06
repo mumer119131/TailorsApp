@@ -42,7 +42,7 @@
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/etEmail"
+        android:id="@+id/etFatherName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

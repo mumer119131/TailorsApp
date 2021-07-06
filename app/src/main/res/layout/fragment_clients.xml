@@ -35,7 +35,7 @@
                 app:titleTextColor="#FFFFFF" />
 
             <TextView
-                android:id="@+id/userName"
+                android:id="@+id/clientName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|top"
@@ -43,7 +43,7 @@
                 android:fontFamily="sans-serif-thin"
                 android:text="User Name"
                 android:textColor="#FFFFFF"
-                android:textSize="45sp"
+                android:textSize="30sp"
                 app:layout_collapseMode="none" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -110,7 +110,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvClients"
                 android:layout_width="match_parent"
-                android:layout_height="500dp" />
+                android:layout_height="500dp"
+                android:layout_marginTop="20dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

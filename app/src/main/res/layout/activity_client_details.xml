@@ -35,7 +35,7 @@
                 app:titleTextColor="#FFFFFF" />
 
             <ImageView
-                android:id="@+id/backBtnParticipants"
+                android:id="@+id/backBtnClientDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -46,7 +46,7 @@
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView
-                android:id="@+id/userName"
+                android:id="@+id/clientName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|top"
@@ -54,7 +54,7 @@
                 android:fontFamily="sans-serif-thin"
                 android:text="Client Name"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 app:layout_collapseMode="none" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -89,23 +89,83 @@
                 app:cardElevation="4dp">
 
                 <ImageView
-                    android:id="@+id/imageView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/ic_baseline_email_24"
-                    tools:ignore="VectorDrawableCompat" />
+                    app:srcCompat="@drawable/ic_baseline_format_list_numbered_24" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/idTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="50dp"
                     android:layout_marginLeft="50dp"
-                    android:text="Email"
+                    android:text="ID"
+                    android:textSize="18sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="10dp"
+                app:cardBackgroundColor="#F3EFEF"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    app:srcCompat="@drawable/ic_baseline_father" />
+
+                <TextView
+                    android:id="@+id/fatherTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:text="Father Name"
+                    android:textSize="18sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="10dp"
+                app:cardBackgroundColor="#F3EFEF"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    app:srcCompat="@drawable/ic_baseline_date_range_24" />
+
+                <TextView
+                    android:id="@+id/dateTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:text="Date"
                     android:textSize="18sp" />
             </androidx.cardview.widget.CardView>
 
@@ -130,6 +190,7 @@
                     app:srcCompat="@drawable/ic_baseline_local_phone_24" />
 
                 <TextView
+                    android:id="@+id/phoneTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -160,6 +221,7 @@
                     app:srcCompat="@drawable/ic_arm_icon" />
 
                 <TextView
+                    android:id="@+id/armTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -190,6 +252,7 @@
                     app:srcCompat="@drawable/ic_leg_icon" />
 
                 <TextView
+                    android:id="@+id/legTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -220,6 +283,7 @@
                     app:srcCompat="@drawable/ic_chest_icon" />
 
                 <TextView
+                    android:id="@+id/chestTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -250,6 +314,7 @@
                     app:srcCompat="@drawable/ic_neck_icon" />
 
                 <TextView
+                    android:id="@+id/neckTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -280,6 +345,7 @@
                     app:srcCompat="@drawable/ic_front_side_icon" />
 
                 <TextView
+                    android:id="@+id/frontTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -310,6 +376,7 @@
                     app:srcCompat="@drawable/ic_back_side_icon" />
 
                 <TextView
+                    android:id="@+id/backTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -318,6 +385,17 @@
                     android:text="Back Side"
                     android:textSize="18sp" />
             </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:text="Edit" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

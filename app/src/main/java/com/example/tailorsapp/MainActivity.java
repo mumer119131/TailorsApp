@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new HomeFragment();
                             break;
                         case R.id.nav_orders:
-                            selectedFragment=new OrdersFragment();
+                            selectedFragment=new BackupFragment();
                             break;
                         case R.id.nav_add:
                             selectedFragment = new AddFragment();

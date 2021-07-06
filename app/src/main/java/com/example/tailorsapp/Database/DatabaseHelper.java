@@ -102,4 +102,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_NAME,null);
         return cursor;
     }
+
 }
