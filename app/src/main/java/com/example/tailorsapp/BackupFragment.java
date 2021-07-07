@@ -47,6 +47,7 @@ public class BackupFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         ViewGroup root= (ViewGroup) inflater.inflate(R.layout.fragment_orders,container,false);
         btnBackup = root.findViewById(R.id.btnBackup);
         btnRestore= root.findViewById(R.id.btnRestore);
