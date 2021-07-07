@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,9 +36,10 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.Holder> 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         ClientModel model = list.get(position);
-        String id=model.getID()+".";
+        String id="ID: "+model.getID();
         holder.userID.setText(id);
         holder.userName.setText(model.getUserName());
+        holder.indexNo.setText(Integer.toString(position+1)+".");
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,13 +57,14 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.Holder> 
 
     public class Holder extends RecyclerView.ViewHolder{
          TextView userID;
-         TextView userName;
+         TextView userName,indexNo;
          LinearLayout linearLayout;
         public Holder(@NonNull View itemView) {
             super(itemView);
             userID=itemView.findViewById(R.id.userID);
             userName=itemView.findViewById(R.id.tvUserName);
             linearLayout=itemView.findViewById(R.id.linearLayout);
+            indexNo = itemView.findViewById(R.id.indexNo);
 
         }
     }

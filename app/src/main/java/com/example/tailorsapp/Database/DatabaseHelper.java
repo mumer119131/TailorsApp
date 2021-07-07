@@ -102,5 +102,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_NAME,null);
         return cursor;
     }
+    public boolean update_in_clients(int id,String name,String phone,String leg, String arm,String chest,String neck,String front,String back,String date,String details ){
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put(NAME,name);
+        values.put(PHONE,phone);
+        values.put(LEG,leg);
+        values.put(ARM,arm);
+        values.put(CHEST,chest);
+        values.put(NECK,neck);
+        values.put(FRONT_SIDE,front);
+        values.put(BACK_SIDE,back);
+        values.put(DATE,date);
+        values.put(ADDITIONAL_DETAILS,details);
+        long result= db.update(TABLE_NAME,values,"ID="+id,null);
+        if(result==-1)
+            return false;
+        else
+            return true;
+    }
 
 }

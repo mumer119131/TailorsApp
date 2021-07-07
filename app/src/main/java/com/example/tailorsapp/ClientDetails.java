@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ClientDetails extends AppCompatActivity {
     Cursor cursorData;
     ImageView btnBack;
     Button btnEdit,btnDelete;
+    String scale="inches";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,11 @@ public class ClientDetails extends AppCompatActivity {
         if(bundle!=null){
             id = bundle.getString("ID");
         }
+
+        SharedPreferences preferences = this.getSharedPreferences("SCALE",MODE_PRIVATE);
+        scale=preferences.getString("SCALEVALUE","");
+
+
         btnBack =findViewById(R.id.backBtnClientDetails);
         dateTV=findViewById(R.id.dateTV);
         phoneTV=findViewById(R.id.phoneTV);
@@ -82,12 +89,12 @@ public class ClientDetails extends AppCompatActivity {
 
         idTV.setText(id);
         phoneTV.setText(phone);
-        armTV.setText(arm);
-        legTV.setText(leg);
-        chestTV.setText(chest);
-        neckTV.setText(neck);
-        frontTV.setText(front);
-        backTV.setText(back);
+        armTV.setText(arm+" "+scale);
+        legTV.setText(leg+" "+scale);
+        chestTV.setText(chest+" "+scale);
+        neckTV.setText(neck+" "+scale);
+        frontTV.setText(front+" "+scale);
+        backTV.setText(back+" "+scale);
         clientName.setText(name);
         dateTV.setText(date);
         fatherTV.setText(fatherName);

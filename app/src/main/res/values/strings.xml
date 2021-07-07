@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">TailorsApp</string>
     <string name="skip"><u>skip</u></string>
+
+
+    <array name="measurement_scales">
+        <item>inch</item>
+        <item>feet</item>
+        <item>mm</item>
+        <item>cm</item>
+    </array>
 </resources>

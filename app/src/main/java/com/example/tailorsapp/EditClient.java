@@ -7,10 +7,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.tailorsapp.Database.DatabaseHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EditClient extends AppCompatActivity {
-    EditText name, fatherName, phoneNumber, leg, arm, chest, neck, frontSide, backSide;
-    Button saveBtn;
+    private EditText name, fatherName, phoneNumber, leg, arm, chest, neck, frontSide, backSide;
+    private Button saveBtn;
+    private String str_id="";
+    private String str_name = "";
+    private String str_fatherName = "";
+    private String str_phoneNumber = "";
+    private String str_leg = "";
+    private String str_Arm = "";
+    private String str_chest = "";
+    private String str_neck = "";
+    private String str_front = "";
+    private String str_back = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +42,34 @@ public class EditClient extends AppCompatActivity {
         neck = findViewById(R.id.etNeck);
         frontSide = findViewById(R.id.etFrontSide);
         backSide = findViewById(R.id.etBackSide);
-        saveBtn.findViewById(R.id.btnSave);
+        saveBtn=findViewById(R.id.btnToSave);
+
 
         getIntentExtras();
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String nameData=name.getText().toString();
+                String fatherData=fatherName.getText().toString();
+                String phoneData=phoneNumber.getText().toString();
+                String legData=leg.getText().toString();
+                String armData=arm.getText().toString();
+                String chestData=chest.getText().toString();
+                String neckData=neck.getText().toString();
+                String frontData=frontSide.getText().toString();
+                String backData=backSide.getText().toString();
 
+                DatabaseHelper helper = new DatabaseHelper(EditClient.this);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                String currentDate = sdf.format(new Date());
+                Boolean update = helper.update_in_clients(Integer.parseInt(str_id),nameData,phoneData,legData,armData,chestData,neckData,frontData,backData,currentDate,fatherData);
+                if(update){
+                    Toast.makeText(EditClient.this, "Updated", Toast.LENGTH_SHORT).show();
+                    finish();
+                }else{
+                    Toast.makeText(EditClient.this, "Failed Editing", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -42,16 +78,7 @@ public class EditClient extends AppCompatActivity {
     }
 
     private void getIntentExtras() {
-        String str_id;
-        String str_name = "";
-        String str_fatherName = "";
-        String str_phoneNumber = "";
-        String str_leg = "";
-        String str_Arm = "";
-        String str_chest = "";
-        String str_neck = "";
-        String str_front = "";
-        String str_back = "";
+
 
 
         Bundle bundle = getIntent().getExtras();

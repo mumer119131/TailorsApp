@@ -1,6 +1,7 @@
 package com.example.tailorsapp;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +24,19 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
 import com.example.tailorsapp.PersonModel.PersonModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 
 public class BackupFragment extends Fragment {
     Button btnBackup;
@@ -41,6 +51,10 @@ public class BackupFragment extends Fragment {
         btnBackup = root.findViewById(R.id.btnBackup);
         btnRestore= root.findViewById(R.id.btnRestore);
         firebaseDatabase = FirebaseDatabase.getInstance();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
 
         btnBackup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,10 +62,16 @@ public class BackupFragment extends Fragment {
                 if(!networkConnected(getActivity())){
                     Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     return;
-
+                }
+                if(!isOnline()){
+                    Toast.makeText(getActivity(), "Internet not working", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 Cursor dataCursor = fetchData();
+
                 pushData(dataCursor);
+
+
             }
         });
         btnRestore.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +81,11 @@ public class BackupFragment extends Fragment {
                     Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(!isOnline()){
+                    Toast.makeText(getActivity(), "Internet not working", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 RestoreData(getActivity());
             }
         });
@@ -69,6 +94,10 @@ public class BackupFragment extends Fragment {
     }
 
     private void RestoreData(Context ctx) {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Restoring Data");
+        progressDialog.show();
         DatabaseHelper db = new DatabaseHelper(ctx);
         firebaseDatabase.getReference("Data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -86,23 +115,32 @@ public class BackupFragment extends Fragment {
                     String fatherName = snap.child("fatherName").getValue().toString();
                     String name =snap.child("name").getValue().toString();
                     Cursor c = db.getDatabyID(Integer.parseInt(id));
-                    if(c.getCount()>0){
-                        continue;
-                    }else {
-                        db.insert_in_clients(name, phone, leg, arm, chest, neck, front, back, date, fatherName);
+                    c.moveToFirst();
+
+                    if (c.getCount()>0 &&(c.getString(1).equals(name)) && (c.getString(10).equals(fatherName))) {
+                            continue;
+                        } else {
+                            db.insert_in_clients(name, phone, leg, arm, chest, neck, front, back, date, fatherName);
                     }
+
                 }
+                progressDialog.dismiss();
                 Toast.makeText(ctx, "Data Restored", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(ctx, "Data Restore Cancelled", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void pushData(Cursor dataCursor) {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Backup Data");
+        progressDialog.show();
         if(dataCursor.moveToFirst()){
 
             do{
@@ -123,6 +161,7 @@ public class BackupFragment extends Fragment {
             }while(dataCursor.moveToNext());{
                 Toast.makeText(getActivity(), "Data Backup Done", Toast.LENGTH_SHORT).show();
                 dataCursor.close();
+                progressDialog.dismiss();
                 return;
             }
 
@@ -143,12 +182,27 @@ public class BackupFragment extends Fragment {
         NetworkInfo wifiConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo mobileConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected()) ){
+        if((wifiConn != null && wifiConn.isConnected() && wifiConn.isAvailable()) || (mobileConn != null && mobileConn.isConnected() && mobileConn.isAvailable()) ){
             return true;
         }else{
             return false;
         }
 
+    }
+    public boolean isOnline() {
+        try {
+            int timeoutMs = 1500;
+            Socket sock = new Socket();
+            SocketAddress sockaddr = new InetSocketAddress("8.8.8.8", 53);
+
+            sock.connect(sockaddr, timeoutMs);
+            sock.close();
+
+            return true;
+        } catch (IOException e) {
+
+            return false;
+        }
     }
 
 

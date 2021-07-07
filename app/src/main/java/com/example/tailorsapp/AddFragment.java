@@ -37,7 +37,7 @@ public class AddFragment extends Fragment {
         etNeck=root.findViewById(R.id.etNeck);
         etFrontSide=root.findViewById(R.id.etFrontSide);
         etBackSide=root.findViewById(R.id.etBackSide);
-        btnSave=root.findViewById(R.id.btnSave);
+        btnSave=root.findViewById(R.id.btnToSave);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         currentDate = sdf.format(new Date());
         databaseHelper=new DatabaseHelper(getActivity());
