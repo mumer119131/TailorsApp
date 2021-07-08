@@ -1,17 +1,12 @@
 package com.example.tailorsapp;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
-import com.example.tailorsapp.PersonModel.PersonModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -48,7 +39,7 @@ public class BackupFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        ViewGroup root= (ViewGroup) inflater.inflate(R.layout.fragment_orders,container,false);
+        ViewGroup root= (ViewGroup) inflater.inflate(R.layout.fragment_backup,container,false);
         btnBackup = root.findViewById(R.id.btnBackup);
         btnRestore= root.findViewById(R.id.btnRestore);
         firebaseDatabase = FirebaseDatabase.getInstance();

@@ -23,9 +23,8 @@
         />
 
     <item
-        android:title="Profile"
         android:id="@+id/nav_profile"
-        android:icon="@drawable/ic_outline_perm_identity_24"
-        />
+        android:icon="@drawable/ic_outline_orders"
+        android:title="Orders" />
 
 </menu>

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment=new ClientsFragment();
                             break;
                         case R.id.nav_profile:
-                            selectedFragment=new ProfileFragment();
+                            selectedFragment=new OrdersFragment();
                             break;
                     }
                   getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
