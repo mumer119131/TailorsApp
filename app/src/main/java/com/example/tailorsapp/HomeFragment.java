@@ -44,6 +44,7 @@ public class HomeFragment extends Fragment {
     ArrayList<ClientModel> list;
     private Button signOut;
     private FirebaseAuth mAuth;
+    private SharedPreferences preferences;
 
     @Nullable
     @Override
@@ -116,12 +117,12 @@ public class HomeFragment extends Fragment {
         reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                long noOfClientsBackUp = 0;
-                noOfClientsBackUp =snapshot.getChildrenCount();
-                SharedPreferences preferences = getActivity().getSharedPreferences("BackupClients",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("NoOfClients",Long.toString(noOfClientsBackUp));
-                editor.apply();
+//                long noOfClientsBackUp = 0;
+//                noOfClientsBackUp =snapshot.getChildrenCount();
+//                preferences = getActivity().getSharedPreferences("BackupClients",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.putString("NoOfClients",Long.toString(noOfClientsBackUp));
+//                editor.apply();
             }
 
             @Override

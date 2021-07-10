@@ -1,5 +1,6 @@
 package com.example.tailorsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,12 @@ public class OrdersFragment extends Fragment {
         addOrderBtn = root.findViewById(R.id.addOrderFloatingAction);
 
 
-
+        addOrderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(),AddOrder.class));
+            }
+        });
 
 
 

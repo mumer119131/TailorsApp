@@ -101,10 +101,10 @@ public class OrderDataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public boolean EditDataIntoTable(int clientID,String name,String price,String type,String dateOrdered,String dateReceived,String status,String furtherDetails){
+    public boolean EditDataIntoTable(int orderID,String name,String price,String type,String dateOrdered,String dateReceived,String status,String furtherDetails){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues values=new ContentValues();
-        values.put(CLIENT_ID,clientID);
+        values.put(ORDER_ID,orderID);
         values.put(NAME,name);
         values.put(PRICE,price);
         values.put(TYPE,type);
@@ -113,7 +113,7 @@ public class OrderDataBaseHelper extends SQLiteOpenHelper {
         values.put(STATUS,status);
         values.put(FURTHER_DETAILS,furtherDetails);
 
-        long result = db.update(TABLE_NAME,values,"ID="+clientID,null);
+        long result = db.update(TABLE_NAME,values,"ORDER_ID="+orderID,null);
         if(result==-1){
             return false;
         }

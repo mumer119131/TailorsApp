@@ -1,10 +1,7 @@
 package com.example.tailorsapp;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,36 +14,23 @@ import android.widget.Toast;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
 
-public class ClientDetails extends AppCompatActivity {
+public class OrderConfirmationDetails extends AppCompatActivity {
     String id;
     DatabaseHelper db;
     TextView dateTV,phoneTV,armTV,legTV,chestTV,neckTV,frontTV,backTV,clientName,idTV,fatherTV;
     Cursor cursorData;
     ImageView btnBack;
-    Button btnEdit,btnDelete;
+    Button btnConfirm;
     String scale="inches";
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==2 && resultCode==RESULT_OK && data != null){
-            String status = data.getStringExtra("STATUS");
-            if(status.equals("DONE")){
-                startActivity(getIntent());
-                finish();
-            }
-
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_details);
+        setContentView(R.layout.activity_order_details);
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
             id = bundle.getString("ID");
         }
+        Toast.makeText(this, "Order Details Started", Toast.LENGTH_SHORT).show();
 
         SharedPreferences preferences = this.getSharedPreferences("SCALE",MODE_PRIVATE);
         scale=preferences.getString("SCALEVALUE","");
@@ -64,8 +48,7 @@ public class ClientDetails extends AppCompatActivity {
         clientName=findViewById(R.id.clientName);
         idTV=findViewById(R.id.idTV);
         fatherTV = findViewById(R.id.fatherTV);
-        btnEdit = findViewById(R.id.btnEdit);
-        btnDelete=findViewById(R.id.btnConfirm);
+        btnConfirm = findViewById(R.id.btnConfirm);
 
 
         cursorData = fetchData();
@@ -94,7 +77,7 @@ public class ClientDetails extends AppCompatActivity {
             date = cursorData.getString(9);
             fatherName = cursorData.getString(10);
 
-               }
+        }
         cursorData.close();
 
 
@@ -109,82 +92,29 @@ public class ClientDetails extends AppCompatActivity {
         clientName.setText(name);
         dateTV.setText(date);
         fatherTV.setText(fatherName);
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        String finalName = name;
         String finalId = id;
-        String finalFatherName = fatherName;
-        String finalLeg = leg;
-        String finalArm = arm;
-        String finalChest = chest;
-        String finalNeck = neck;
-        String finalFront = front;
-        String finalBack = back;
-        String finalPhone = phone;
-        btnEdit.setOnClickListener(new View.OnClickListener() {
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(ClientDetails.this,EditClient.class);
-            i.putExtra("Name", finalName);
-            i.putExtra("ID", finalId);
-            i.putExtra("Father", finalFatherName);
-            i.putExtra("leg", finalLeg);
-            i.putExtra("Arm", finalArm);
-            i.putExtra("Chest", finalChest);
-            i.putExtra("Neck", finalNeck);
-            i.putExtra("FRONT", finalFront);
-            i.putExtra("back", finalBack);
-            i.putExtra("Phone", finalPhone);
-            startActivityForResult(i,2);
+            Intent i = new Intent(OrderConfirmationDetails.this,OrderFinalConfirmation.class);
+            i.putExtra("clientID", finalId);
+            startActivity(i);
         }
     });
-        String finalId1 = id;
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(ClientDetails.this);
-            builder.setTitle("Delete");
-            builder.setCancelable(false);
-            builder.setMessage("Are you sure to delete the client ?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            DeleteAnitem(finalId1);
-                            Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ClientDetails.this,MainActivity.class));
-                            finish();
-                        }
-                    });
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-         AlertDialog alertDialog = builder.create();
-         alertDialog.show();
-
-        }
-    });
-
-
     }
 
     private Cursor fetchData() {
-        db =new DatabaseHelper(ClientDetails.this);
+        db =new DatabaseHelper(OrderConfirmationDetails.this);
         int ID=Integer.parseInt(id);
         Cursor cursor = db.getDatabyID(ID);
 
         return cursor;
     }
-    private  void DeleteAnitem(String id){
-        DatabaseHelper db = new DatabaseHelper(ClientDetails.this);
-        db.DeleteDataByID(Integer.parseInt(id));
-
-    }
-
 }

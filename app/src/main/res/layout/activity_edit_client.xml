@@ -89,7 +89,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:hint="Leg"
-            app:startIconDrawable="@drawable/ic_name_icon">
+            app:startIconDrawable="@drawable/ic_leg_icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etLeg"

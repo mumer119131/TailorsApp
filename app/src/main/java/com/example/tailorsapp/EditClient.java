@@ -2,6 +2,7 @@ package com.example.tailorsapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -66,6 +67,9 @@ public class EditClient extends AppCompatActivity {
                 Boolean update = helper.update_in_clients(Integer.parseInt(str_id),nameData,phoneData,legData,armData,chestData,neckData,frontData,backData,currentDate,fatherData);
                 if(update){
                     Toast.makeText(EditClient.this, "Updated", Toast.LENGTH_SHORT).show();
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("STATUS","DONE");
+                    setResult(RESULT_OK,returnIntent);
                     finish();
                 }else{
                     Toast.makeText(EditClient.this, "Failed Editing", Toast.LENGTH_SHORT).show();
