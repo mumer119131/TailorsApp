@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.TailorsApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#ffbf00</item>
+        <item name="colorPrimary">#DD1818</item>
         <item name="colorPrimaryVariant">#9E9D9A</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -17,6 +18,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+        Bundle bundle = getIntent().getExtras();
+            if(bundle != null) {
+                String frag = bundle.getString("FRAG");
+                if (frag.equals("ORDERS")) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
+                            new OrdersFragment()).commit();
+                }
+                if (frag.equals("CLIENTS")) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
+                            new ClientsFragment()).commit();
+                }
+            }
+
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
                 new HomeFragment()).commit();
     }

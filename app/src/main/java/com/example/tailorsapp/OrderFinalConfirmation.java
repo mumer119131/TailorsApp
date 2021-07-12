@@ -66,7 +66,7 @@ public class OrderFinalConfirmation extends AppCompatActivity {
                 deliveryDateTV.setText(materialDatePicker.getHeaderText());
                 TimeZone timeZoneUTC = TimeZone.getDefault();
                 int offsetFromUTC = timeZoneUTC.getOffset(new Date().getTime()) * -1;
-                SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
                 Date date = new Date(selection + offsetFromUTC);
                 deliveryDateTV.setText(simpleFormat.format(date));
                 deliveryDate = date;
@@ -114,6 +114,10 @@ public class OrderFinalConfirmation extends AppCompatActivity {
             OrderDataBaseHelper helper = new OrderDataBaseHelper(this);
             helper.InsertDataIntoTable(Integer.parseInt(id),name,str_price,str_type,currentDate,str_deliveryDate,"Pending",str_furtherDetails);
             Toast.makeText(this, "Order Added", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(OrderFinalConfirmation.this, MainActivity.class);
+            i.putExtra("FRAG","ORDERS");
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
             finish();
         }
 

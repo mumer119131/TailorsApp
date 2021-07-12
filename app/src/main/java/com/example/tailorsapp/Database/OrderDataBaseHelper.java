@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Date;
+
 public class OrderDataBaseHelper extends SQLiteOpenHelper {
 
     public  static  final String DATABASE_NAME = "orderSqlDatabase.db";
@@ -120,6 +122,12 @@ public class OrderDataBaseHelper extends SQLiteOpenHelper {
         else {
             return true;
         }
+    }
+
+    public Cursor getOrdersCount(String status){
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor result=db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+STATUS+"=\""+status+"\"",null);
+        return result;
     }
 
 

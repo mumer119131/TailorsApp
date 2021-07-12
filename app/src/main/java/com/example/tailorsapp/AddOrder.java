@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.tailorsapp.Adapter.OrdersAdapter;
@@ -19,6 +20,7 @@ public class AddOrder extends AppCompatActivity {
     OrdersAdapter adapter;
     LinearLayoutManager manager;
     ArrayList<ClientModel> list;
+    ImageView backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +28,18 @@ public class AddOrder extends AppCompatActivity {
         setContentView(R.layout.activity_add_order);
 
         clientsRecyclerView = findViewById(R.id.clientsRecyclerViewOrder);
+        backBtn = findViewById(R.id.backBtn);
 
         list = new ArrayList<>();
         manager = new LinearLayoutManager(this);
         clientsRecyclerView.setLayoutManager(manager);
         FetchData();
-
+     backBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             finish();
+         }
+     });
     }
     private void FetchData() {
         DatabaseHelper helper= new DatabaseHelper(this);

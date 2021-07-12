@@ -52,7 +52,7 @@ public class PendingOrdersFragment extends Fragment {
             while (cursor.moveToNext()){
                 String status = cursor.getString(7);
                 if(status.equals("Pending")){
-                    list.add(new OrderDisplayModel(cursor.getString(2),cursor.getString(4),cursor.getString(3),cursor.getString(5),cursor.getString(6),cursor.getString(0),cursor.getString(7)));
+                    list.add(new OrderDisplayModel(cursor.getString(2),cursor.getString(4),cursor.getString(3),cursor.getString(5),cursor.getString(6),cursor.getString(0),cursor.getString(7),cursor.getString(8)));
 
                 }
             }

@@ -7,11 +7,20 @@
     android:orientation="vertical"
     tools:context=".AddOrder">
 
+    <ImageView
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:tint="#5A5959"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto_light"
         android:text="Select Client :"
         android:textSize="24sp" />
@@ -20,6 +29,6 @@
         android:id="@+id/clientsRecyclerViewOrder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp" />
+        android:layout_margin="10dp" />
 
 </LinearLayout>

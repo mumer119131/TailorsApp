@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 public class EditClient extends AppCompatActivity {
     private EditText name, fatherName, phoneNumber, leg, arm, chest, neck, frontSide, backSide;
     private Button saveBtn;
+    private ImageView backBtn;
     private String str_id="";
     private String str_name = "";
     private String str_fatherName = "";
@@ -44,6 +46,7 @@ public class EditClient extends AppCompatActivity {
         frontSide = findViewById(R.id.etFrontSide);
         backSide = findViewById(R.id.etBackSide);
         saveBtn=findViewById(R.id.btnToSave);
+        backBtn = findViewById(R.id.backBtnEdit);
 
 
         getIntentExtras();
@@ -78,7 +81,12 @@ public class EditClient extends AppCompatActivity {
         });
 
 
-
+     backBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             finish();
+         }
+     });
     }
 
     private void getIntentExtras() {

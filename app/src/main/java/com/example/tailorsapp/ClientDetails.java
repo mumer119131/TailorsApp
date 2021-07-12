@@ -155,7 +155,9 @@ public class ClientDetails extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             DeleteAnitem(finalId1);
                             Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ClientDetails.this,MainActivity.class));
+                            Intent i = new Intent(ClientDetails.this,MainActivity.class);
+                            i.putExtra("FRAG","CLIENTS");
+                            startActivity(i);
                             finish();
                         }
                     });

@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center"
-        android:background="@drawable/cardview_background_orders"
-        app:cardBackgroundColor="#FDC303"
+        android:background="@drawable/clients_background"
+        app:cardBackgroundColor="#dd1818"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp"
         app:cardUseCompatPadding="false">

@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
 
@@ -30,7 +29,6 @@ public class OrderConfirmationDetails extends AppCompatActivity {
         if(bundle!=null){
             id = bundle.getString("ID");
         }
-        Toast.makeText(this, "Order Details Started", Toast.LENGTH_SHORT).show();
 
         SharedPreferences preferences = this.getSharedPreferences("SCALE",MODE_PRIVATE);
         scale=preferences.getString("SCALEVALUE","");

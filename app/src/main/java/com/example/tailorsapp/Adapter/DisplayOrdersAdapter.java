@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tailorsapp.Database.OrderDataBaseHelper;
+import com.example.tailorsapp.FragmentCompletedOrders;
 import com.example.tailorsapp.PersonModel.OrderDisplayModel;
 import com.example.tailorsapp.R;
 
@@ -43,19 +44,17 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.pending_and_completed_order_row,parent,false);
-        Log.e("onCreateView Holder","crea 8 teViewHolder Created");
         return new Holder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         OrderDisplayModel model = list.get(position);
-        Log.e("onBindView Holder","bindViewHolder Created");
         String price = "Price : "+model.getPrice();
         String type = "Type : "+model.getType();
         String dateOrdered = "Date Ordered "+model.getDateOrdered();
         String dateToReceive = "Delivery Date : "+model.getDateReceived();
-        orderID = model.getIndexNo()+".";
+        orderID = model.getIndexNo();
         holder.indexNoOrders.setText(model.getIndexNo());
         holder.clientName.setText(model.getName());
         holder.price.setText(price);
@@ -72,12 +71,18 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
                 String status = model.getStatus();
                 if(status.equals("Pending")){
                     builder.setTitle(model.getName());
-                    builder.setMessage("Is this Order Completed");
+                    String furtherDetails = model.getFurtherDetails();
+                    if(furtherDetails.equals("")){
+                        furtherDetails = "(No Further Details)";
+                    }
+                    builder.setMessage("("+furtherDetails+")\n\nIs this Order Completed");
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             orderCompletedChange(model.getIndexNo());
-                            refreshData(list);
+                            list.remove(position);
+                            notifyItemRemoved(position);
+
 
                         }
                     });
@@ -90,13 +95,31 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
                 }
+                if(status.equals("Completed")){
+                    showDialog(model.getName(),model.getFurtherDetails());
+                }
             }
         });
 
     }
 
-    public void setItems(List<OrderDisplayModel> list) {
-        this.list = list;
+    private void showDialog(String name, String furtherDetails) {
+        if(furtherDetails.equals("")){
+            furtherDetails = "No Further Details";
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        builder.setTitle(name);
+        builder.setMessage(furtherDetails);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     private void orderCompletedChange(String order_no) {

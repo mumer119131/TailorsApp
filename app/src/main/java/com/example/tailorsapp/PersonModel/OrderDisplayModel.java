@@ -1,9 +1,9 @@
 package com.example.tailorsapp.PersonModel;
 
 public class OrderDisplayModel {
-    private String name,type,price,dateOrdered,dateReceived,indexNo,status;
+    private String name,type,price,dateOrdered,dateReceived,indexNo,status,furtherDetails;
 
-    public OrderDisplayModel(String name, String type, String price, String dateOrdered, String dateReceived, String indexNo,String status) {
+    public OrderDisplayModel(String name, String type, String price, String dateOrdered, String dateReceived, String indexNo,String status,String furtherDetails) {
         this.name = name;
         this.type = type;
         this.price = price;
@@ -11,6 +11,15 @@ public class OrderDisplayModel {
         this.dateReceived = dateReceived;
         this.indexNo = indexNo;
         this.status = status;
+        this.furtherDetails = furtherDetails;
+    }
+
+    public String getFurtherDetails() {
+        return furtherDetails;
+    }
+
+    public void setFurtherDetails(String furtherDetails) {
+        this.furtherDetails = furtherDetails;
     }
 
     public String getStatus() {

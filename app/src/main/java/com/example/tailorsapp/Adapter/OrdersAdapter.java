@@ -46,7 +46,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.Holder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, OrderConfirmationDetails.class);
-                Toast.makeText(context, "Started Activity", Toast.LENGTH_SHORT).show();
                 intent.putExtra("ID",list.get(position).getID());
                 context.startActivity(intent);
             }

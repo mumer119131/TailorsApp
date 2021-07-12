@@ -19,7 +19,7 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="251dp"
+            android:layout_height="match_parent"
             android:theme="@style/CollapsingToolbar"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:title="  Clients"
@@ -54,7 +54,8 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/ic_baseline_edit_24"
-                app:backgroundTint="@color/white" />
+                app:backgroundTint="@color/white"
+                app:layout_collapseMode="pin" />
 
             <TextView
                 android:id="@+id/clientName"
