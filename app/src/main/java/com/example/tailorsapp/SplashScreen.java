@@ -12,12 +12,14 @@ import android.widget.Toast;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
 import com.example.tailorsapp.Database.OrderDataBaseHelper;
+import com.example.tailorsapp.Database.UserDatabaseHelper;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashScreen extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseHelper myDB;
     private OrderDataBaseHelper orderDB;
+    private UserDatabaseHelper userDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,17 +27,20 @@ public class SplashScreen extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         myDB=new DatabaseHelper(this);
         orderDB = new OrderDataBaseHelper(this);
+        userDB = new UserDatabaseHelper(this);
         SQLiteDatabase db=myDB.getWritableDatabase();
 
         boolean tableExist=DoesTableExists(db,"Clients");
         boolean orderTableExist = DoesTableExists(db,"ORDERS");
+        boolean userTableExist = DoesTableExists(db,"USERS_DATA");
         if(!tableExist){
             myDB.onCreate(db);
-            Toast.makeText(this, "Clients Database Created", Toast.LENGTH_SHORT).show();
         }
         if(!orderTableExist){
             orderDB.onCreate(db);
-            Toast.makeText(this, "Orders Database Created", Toast.LENGTH_SHORT).show();
+        }
+        if(!userTableExist){
+            userDB.onCreate(db);
         }
 
         new Handler().postDelayed(new Runnable() {

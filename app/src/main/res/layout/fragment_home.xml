@@ -78,7 +78,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/noOrdersAdded"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="No Orders Added Yet"
+                android:visibility="gone" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/PieChart"
@@ -150,7 +161,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/roboto_light"
                 android:gravity="center"
-                android:text="Total Clients"
+                android:text="Local Clients"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
@@ -162,6 +173,85 @@
                 android:gravity="center"
                 android:text="100"
                 android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="175dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/roboto_light"
+                android:gravity="center"
+                android:text="Orders Backup"
+                android:textColor="#bb1818"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/totalOrdersInBackup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="100"
+                android:textColor="#bb1818"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/clientsView"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:background="#bb1818" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/totalOrders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/roboto_light"
+                android:gravity="center"
+                android:text="Local Orders"
+                android:textColor="#bb1818"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/totalOrderLocal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="100"
+                android:textColor="#bb1818"
                 android:textSize="30sp" />
         </LinearLayout>
 

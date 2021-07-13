@@ -49,6 +49,7 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
+
         OrderDisplayModel model = list.get(position);
         String price = "Price : "+model.getPrice();
         String type = "Type : "+model.getType();

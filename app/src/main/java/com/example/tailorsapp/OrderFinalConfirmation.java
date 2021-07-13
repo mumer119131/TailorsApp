@@ -114,11 +114,10 @@ public class OrderFinalConfirmation extends AppCompatActivity {
             OrderDataBaseHelper helper = new OrderDataBaseHelper(this);
             helper.InsertDataIntoTable(Integer.parseInt(id),name,str_price,str_type,currentDate,str_deliveryDate,"Pending",str_furtherDetails);
             Toast.makeText(this, "Order Added", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(OrderFinalConfirmation.this, MainActivity.class);
-            i.putExtra("FRAG","ORDERS");
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-            finish();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
         }
 
 

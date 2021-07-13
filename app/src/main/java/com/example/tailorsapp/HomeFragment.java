@@ -4,8 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
 import com.example.tailorsapp.Database.OrderDataBaseHelper;
+import com.example.tailorsapp.Database.UserDatabaseHelper;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -38,6 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,73 +53,105 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private PieChart pieChart;
-    private TextView userName,totalClients,noClients,noClientBackup;
+    private TextView userName, totalClients, noClients, noClientBackup, noOrderedAdded, noOfOrdersInBackup, noOfTotalOrders;
     private Button signOut;
     private FirebaseAuth mAuth;
+    private String name, email, clients_in_backup, orders_in_backup;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup root= (ViewGroup) inflater.inflate(R.layout.fragment_home,container,false);
-        String Name ="";
-        String noOfClientsBackup="";
-        try {
-            SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("Name", Context.MODE_PRIVATE);
-             Name= sharedPreferences.getString("UserName","");
-            SharedPreferences preferences = getActivity().getSharedPreferences("BackupClients",Context.MODE_PRIVATE);
-            noOfClientsBackup = preferences.getString("NoOfClients","");
-        }catch (ClassCastException e){
-            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-        }
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
 
 
-        userName=root.findViewById(R.id.userNameTV);
-        userName.setText(Name);
-
-
+        userName = root.findViewById(R.id.userNameTV);
+        noOfOrdersInBackup = root.findViewById(R.id.totalOrdersInBackup);
+        totalClients = root.findViewById(R.id.totalClientsOfHome);
+        noClientBackup = root.findViewById(R.id.noClientBackup);
+        noClientBackup = root.findViewById(R.id.noClientBackup);
+        pieChart = root.findViewById(R.id.PieChart);
+        signOut = root.findViewById(R.id.btnSignOut);
+        noOfTotalOrders = root.findViewById(R.id.totalOrderLocal);
         mAuth = FirebaseAuth.getInstance();
 
-        totalClients = root.findViewById(R.id.totalClientsOfHome);
+
+        //Setup User Name and Clients Data
+        UserDatabaseHelper db = new UserDatabaseHelper(getActivity());
+        Cursor cursor = db.getAllData();
+        if (cursor.moveToFirst()) {
+            name = cursor.getString(1);
+            email = cursor.getString(2);
+
+        }
+
+        userName.setText(name);
+        cursor.close();
+
+        updateBackupClientsNo();
+        getBackupClientsNo();
+
         int total_Clients = getTotalClients();
         totalClients.setText(Integer.toString(total_Clients));
 
-        signOut=root.findViewById(R.id.btnSignOut);
 
-        noClientBackup = root.findViewById(R.id.noClientBackup);
-        getBackupClientsNo();
-        noClientBackup.setText(noOfClientsBackup);
+        noOfTotalOrders = root.findViewById(R.id.totalOrderLocal);
+        noOfTotalOrders.setText(Integer.toString(getTotalOrders()));
 
         //Pie Chart Setter
 
+
         int[] valuesOfOrder = getValues();
-        pieChart=root.findViewById(R.id.PieChart);
-        Description description=new Description();
+        if (valuesOfOrder[0] == 0 && valuesOfOrder[1] == 0) {
+            noOrderedAdded = root.findViewById(R.id.noOrdersAdded);
+            noOrderedAdded.setVisibility(View.VISIBLE);
+            pieChart.setVisibility(View.GONE);
+        }
+
+        Description description = new Description();
         description.setText("");
         pieChart.setDescription(description);
-        pieChart.setUsePercentValues(true);
         List<PieEntry> values = new ArrayList<>();
-        values.add(new PieEntry(valuesOfOrder[1],"Completed"));
-        values.add(new PieEntry(valuesOfOrder[0],"Pending"));
-        PieDataSet pieDataSet=new PieDataSet(values,"Orders");
+        values.add(new PieEntry(valuesOfOrder[1], "Completed"));
+        values.add(new PieEntry(valuesOfOrder[0], "Pending"));
+        PieDataSet pieDataSet = new PieDataSet(values, "Orders");
         pieDataSet.setValueTextColor(Color.BLACK);
-        PieData pieData=new PieData(pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pieChart.setData(pieData);
         pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        pieChart.animateXY(1400,1400);
-
-
+        pieChart.animateXY(1400, 1400);
 
 
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-                startActivity(new Intent(getActivity(),LoginActivirty.class));
+                startActivity(new Intent(getActivity(), LoginActivirty.class));
 
             }
         });
 
         return root;
+
+
+    }
+
+    private int getTotalOrders() {
+        OrderDataBaseHelper db = new OrderDataBaseHelper(getActivity());
+        Cursor cursor = db.GetAllData();
+        return cursor.getCount();
+    }
+
+    private void getBackupClientsNo() {
+        UserDatabaseHelper db = new UserDatabaseHelper(getActivity());
+        Cursor cursor = db.getAllData();
+
+        if (cursor.moveToFirst()) {
+            String clients_in_back_up = cursor.getString(3);
+            String orders_in_backup = cursor.getString(4);
+            Toast.makeText(getActivity(), orders_in_backup, Toast.LENGTH_SHORT).show();
+            noClientBackup.setText(clients_in_back_up);
+            noOfOrdersInBackup.setText(orders_in_backup);
+        }
 
 
     }
@@ -129,17 +168,30 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void getBackupClientsNo() {
+    private void updateBackupClientsNo() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Data");
+        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Orders").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                orders_in_backup = Long.toString(snapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Clients").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               String  noOfClientsBackUp = "0";
-//               noOfClientsBackUp =Long.toString(snapshot.getChildrenCount());
-//               SharedPreferences preferences = getActivity().getSharedPreferences("BackupClients",Context.MODE_PRIVATE);
-//               SharedPreferences.Editor editor = preferences.edit();
-//               editor.putString("NoOfClients",noOfClientsBackUp);
-//               editor.apply();
+                try {
+                    clients_in_backup = Long.toString(snapshot.getChildrenCount());
+                    UserDatabaseHelper db = new UserDatabaseHelper(getActivity());
+                    db.EditIntoTable("1", name, email, clients_in_backup, orders_in_backup);
+                } catch (SQLiteCantOpenDatabaseException e) {
+                    return;
+                }
+
             }
 
             @Override

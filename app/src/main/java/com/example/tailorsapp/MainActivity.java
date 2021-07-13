@@ -10,6 +10,8 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,19 +20,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-
-        Bundle bundle = getIntent().getExtras();
-            if(bundle != null) {
-                String frag = bundle.getString("FRAG");
-                if (frag.equals("ORDERS")) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                            new OrdersFragment()).commit();
-                }
-                if (frag.equals("CLIENTS")) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                            new ClientsFragment()).commit();
-                }
-            }
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,

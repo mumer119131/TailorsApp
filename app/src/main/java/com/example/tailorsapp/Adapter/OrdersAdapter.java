@@ -18,9 +18,10 @@ import com.example.tailorsapp.R;
 
 import java.util.ArrayList;
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.Holder> {
+public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.Holder>{
     private Context context;
     private ArrayList<ClientModel> list;
+
 
     public OrdersAdapter(Context context, ArrayList<ClientModel> list) {
         this.context = context;

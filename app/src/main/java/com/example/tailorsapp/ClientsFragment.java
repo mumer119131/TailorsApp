@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ import com.example.tailorsapp.Database.DatabaseHelper;
 import java.util.ArrayList;
 
 public class ClientsFragment extends Fragment {
-
+    SearchView searchView;
     RecyclerView recyclerView;
     ClientsAdapter adapter;
     LinearLayoutManager manager;
@@ -45,6 +46,8 @@ public class ClientsFragment extends Fragment {
         noClients = root.findViewById(R.id.noClientsFrag);
         recycleLinearLayout = root.findViewById(R.id.linearLayoutClients);
         clientsView = root.findViewById(R.id.clientsView);
+        searchView = root.findViewById(R.id.searchClients);
+
 
         SharedPreferences preferences = this.getActivity().getSharedPreferences("Name", Context.MODE_PRIVATE);
         String Name = preferences.getString("UserName","");
@@ -53,6 +56,20 @@ public class ClientsFragment extends Fragment {
         FetchData();
         String strClients = Integer.toString(totalClients);
         totalClientsTV.setText(" ("+strClients+")");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return root;
     }
 
