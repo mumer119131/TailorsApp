@@ -187,7 +187,11 @@ public class HomeFragment extends Fragment {
                 try {
                     clients_in_backup = Long.toString(snapshot.getChildrenCount());
                     UserDatabaseHelper db = new UserDatabaseHelper(getActivity());
-                    db.EditIntoTable("1", name, email, clients_in_backup, orders_in_backup);
+                    if(orders_in_backup == null || clients_in_backup == null){
+                        return;
+                    }else {
+                        db.EditIntoTable("1", name, email, clients_in_backup, orders_in_backup);
+                    }
                 } catch (SQLiteCantOpenDatabaseException e) {
                     return;
                 }
