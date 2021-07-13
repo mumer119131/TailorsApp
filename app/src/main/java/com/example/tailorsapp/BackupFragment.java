@@ -10,7 +10,7 @@ import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.example.tailorsapp.Database.DatabaseHelper;
 import com.example.tailorsapp.Database.OrderDataBaseHelper;
 import com.example.tailorsapp.PersonModel.OrderDataBackupModel;
-import com.example.tailorsapp.PersonModel.OrderDisplayModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,8 +32,8 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 public class BackupFragment extends Fragment {
-    Button btnBackup;
-    Button btnRestore;
+    ImageButton btnBackup;
+    ImageButton btnRestore;
     FirebaseDatabase firebaseDatabase;
     ClientsAllDataModel model;
 

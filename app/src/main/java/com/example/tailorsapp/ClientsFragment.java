@@ -88,6 +88,7 @@ public class ClientsFragment extends Fragment {
             recycleLinearLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
             clientsView.setVisibility(View.GONE);
+            searchView.setVisibility(View.GONE);
         }
     }
 
