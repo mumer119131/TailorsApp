@@ -101,7 +101,8 @@ public class OrderFinalConfirmation extends AppCompatActivity {
             datePickerBtn.setError("Select the Date");
             datePickerBtn.requestFocus();
             return;
-        }else{
+        }
+        else{
             //GETTING CUSTOMER NAME
             databaseHelper = new DatabaseHelper(this);
             Cursor cursor = databaseHelper.getDatabyID(Integer.parseInt(id));

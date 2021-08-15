@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,31 +55,71 @@ public class EditClient extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nameData=name.getText().toString();
-                String fatherData=fatherName.getText().toString();
-                String phoneData=phoneNumber.getText().toString();
-                String legData=leg.getText().toString();
-                String armData=arm.getText().toString();
-                String chestData=chest.getText().toString();
-                String neckData=neck.getText().toString();
-                String frontData=frontSide.getText().toString();
-                String backData=backSide.getText().toString();
+                String nameData = name.getText().toString();
+                String fatherData = fatherName.getText().toString();
+                String phoneData = phoneNumber.getText().toString();
+                String legData = leg.getText().toString();
+                String armData = arm.getText().toString();
+                String chestData = chest.getText().toString();
+                String neckData = neck.getText().toString();
+                String frontData = frontSide.getText().toString();
+                String backData = backSide.getText().toString();
 
-                DatabaseHelper helper = new DatabaseHelper(EditClient.this);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                String currentDate = sdf.format(new Date());
-                Boolean update = helper.update_in_clients(Integer.parseInt(str_id),nameData,phoneData,legData,armData,chestData,neckData,frontData,backData,currentDate,fatherData);
-                if(update){
-                    Toast.makeText(EditClient.this, "Updated", Toast.LENGTH_SHORT).show();
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("STATUS","DONE");
-                    setResult(RESULT_OK,returnIntent);
-                    finish();
-                }else{
-                    Toast.makeText(EditClient.this, "Failed Editing", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(nameData)) {
+                    name.setError("Enter the Name");
+                    name.requestFocus();
+                } else if (TextUtils.isEmpty(phoneData)) {
+                    phoneNumber.setError("Enter the Phone Number");
+                    phoneNumber.requestFocus();
+                } else if (TextUtils.isEmpty(fatherData)) {
+                    fatherName.setError("Enter the Father Name");
+                    fatherName.requestFocus();
+                } else if (TextUtils.isEmpty(legData)) {
+                    leg.setError("Enter the Leg Length");
+                    leg.requestFocus();
+                } else if (TextUtils.isEmpty(armData)) {
+                    arm.setError("Enter the Arm Length");
+                    arm.requestFocus();
+                } else if (TextUtils.isEmpty(chestData)) {
+                    chest.setError("Enter the Chest Length");
+                    chest.requestFocus();
+                } else if (TextUtils.isEmpty(neckData)) {
+                    neck.setError("Enter the Neck Length");
+                    neck.requestFocus();
+                } else if (TextUtils.isEmpty(frontData)) {
+                    frontSide.setError("Enter the Front Length");
+                    frontSide.requestFocus();
+                } else if (TextUtils.isEmpty(backData)) {
+                    backSide.setError("Enter the Back Length");
+                    backSide.requestFocus();
+                } else if (nameData.contains(".") || nameData.contains("/") || nameData.contains("\\") || nameData.contains("?") || nameData.contains("<") || nameData.contains(">") || nameData.contains("|")) {
+                    name.setError("Client name should not contain following characters:\n\\/.?<>|");
+                    name.requestFocus();
+                } else if (nameData.length() < 5) {
+                    name.setError("Name must contain at least 5 characters");
+                    name.requestFocus();
+                } else if (fatherData.length() < 5) {
+                    fatherName.setError("Father name must contain at least 5 characters");
+                    fatherName.requestFocus();
+                } else {
+
+                    DatabaseHelper helper = new DatabaseHelper(EditClient.this);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    String currentDate = sdf.format(new Date());
+                    Boolean update = helper.update_in_clients(Integer.parseInt(str_id), nameData, phoneData, legData, armData, chestData, neckData, frontData, backData, currentDate, fatherData);
+                    if (update) {
+                        Toast.makeText(EditClient.this, "Updated", Toast.LENGTH_SHORT).show();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("STATUS", "DONE");
+                        setResult(RESULT_OK, returnIntent);
+                        finish();
+                    } else {
+                        Toast.makeText(EditClient.this, "Failed Editing", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
+
 
 
      backBtn.setOnClickListener(new View.OnClickListener() {

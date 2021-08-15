@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tailorsapp.BottomSheetDialog;
 import com.example.tailorsapp.Database.OrderDataBaseHelper;
 import com.example.tailorsapp.FragmentCompletedOrders;
 import com.example.tailorsapp.PersonModel.OrderDisplayModel;
 import com.example.tailorsapp.R;
 
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 
@@ -59,7 +63,11 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
         holder.indexNoOrders.setText(model.getIndexNo());
         holder.clientName.setText(model.getName());
         holder.price.setText(price);
-        holder.type.setText(type);
+        if(TextUtils.isEmpty(type)){
+            holder.type.setText("Not Set");
+        }else {
+            holder.type.setText(type);
+        }
         holder.dateOrdered.setText(dateOrdered);
         holder.dateDelivery.setText(dateToReceive);
 
@@ -67,6 +75,7 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog();
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setCancelable(false);
                 String status = model.getStatus();

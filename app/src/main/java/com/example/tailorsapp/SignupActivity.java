@@ -3,7 +3,11 @@ package com.example.tailorsapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,13 +18,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tailorsapp.Database.UserDatabaseHelper;
 import com.example.tailorsapp.PersonModel.PersonModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity {
@@ -44,6 +58,14 @@ public class SignupActivity extends AppCompatActivity {
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!networkConnected(SignupActivity.this)) {
+                    Toast.makeText(SignupActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+//                if (!isOnline()) {
+//                    Toast.makeText(SignupActivity.this, "Internet not working", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 String strName = name.getText().toString().trim();
                 String strEmail=email.getText().toString().trim();
                 String strPassword=pass.getText().toString().trim();
@@ -100,8 +122,9 @@ public class SignupActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
                                                 startActivity(new Intent(SignupActivity.this, LoginActivirty.class));
+                                                login(userEmail,userPassword);
                                                 Toast.makeText(SignupActivity.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
-                                                Toast.makeText(SignupActivity.this, "Login to your account", Toast.LENGTH_SHORT).show();
+
                                                 finish();
                                             }
                                             else
@@ -110,8 +133,55 @@ public class SignupActivity extends AppCompatActivity {
                                     });
                         }
                         else
-                            Toast.makeText(SignupActivity.this, "Unable to signUp.\n Please check your internet connection", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, "User Already Exist with this Email", Toast.LENGTH_SHORT).show();
+                    }
+
+                    private void login(String userEmail, String userPassword) {
+                        mAUTH.signInWithEmailAndPassword(userEmail,userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    LoginActivirty obj = new LoginActivirty();
+                                    startActivity(new Intent(SignupActivity.this,MainActivity.class));
+                                    finish();
+                                }
+                                else{
+                                    Toast.makeText(SignupActivity.this, "Failed to Login", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                 });
     }
+    private boolean networkConnected(Context ctx) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiConn != null && wifiConn.isConnected() && wifiConn.isAvailable()) || (mobileConn != null && mobileConn.isConnected() && mobileConn.isAvailable())) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean isOnline() {
+        try {
+            int timeoutMs = 1500;
+            Socket sock = new Socket();
+            SocketAddress sockaddr = new InetSocketAddress("8.8.8.8", 53);
+
+            sock.connect(sockaddr, timeoutMs);
+            sock.close();
+
+            return true;
+        } catch (IOException e) {
+
+            return false;
+        }
+    }
+
+
 }

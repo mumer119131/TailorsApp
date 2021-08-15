@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment {
     private Button signOut;
     private FirebaseAuth mAuth;
     private String name, email, clients_in_backup, orders_in_backup;
+    private UserDatabaseHelper user_db;
 
     @Nullable
     @Override
@@ -73,11 +74,14 @@ public class HomeFragment extends Fragment {
         signOut = root.findViewById(R.id.btnSignOut);
         noOfTotalOrders = root.findViewById(R.id.totalOrderLocal);
         mAuth = FirebaseAuth.getInstance();
+        user_db = new UserDatabaseHelper(getActivity());
+
+        //get username
+        getUserName();
 
 
         //Setup User Name and Clients Data
-        UserDatabaseHelper db = new UserDatabaseHelper(getActivity());
-        Cursor cursor = db.getAllData();
+        Cursor cursor = user_db.getAllData();
         if (cursor.moveToFirst()) {
             name = cursor.getString(1);
             email = cursor.getString(2);
@@ -126,6 +130,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 mAuth.signOut();
                 startActivity(new Intent(getActivity(), LoginActivirty.class));
+                getActivity().finish();
 
             }
         });
@@ -148,7 +153,6 @@ public class HomeFragment extends Fragment {
         if (cursor.moveToFirst()) {
             String clients_in_back_up = cursor.getString(3);
             String orders_in_backup = cursor.getString(4);
-            Toast.makeText(getActivity(), orders_in_backup, Toast.LENGTH_SHORT).show();
             noClientBackup.setText(clients_in_back_up);
             noOfOrdersInBackup.setText(orders_in_backup);
         }
@@ -210,5 +214,31 @@ public class HomeFragment extends Fragment {
         Cursor cursor = helper.getAllData();
         int count = cursor.getCount();
         return count;
+    }
+
+    public void getUserName() {
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("User");
+        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = snapshot.child("name").getValue(String.class);
+                String email = snapshot.child("email").getValue(String.class);
+
+                if (!(user_db == null)) {
+                    Cursor cursor = user_db.getAllData();
+                    if (cursor.getCount() > 0) {
+                        user_db.EditIntoTable("1", name, email, "0", "0");
+                    } else {
+                        user_db.InsertIntoTable("1", name, email, "0", "0");
+                    }
+                    cursor.close();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

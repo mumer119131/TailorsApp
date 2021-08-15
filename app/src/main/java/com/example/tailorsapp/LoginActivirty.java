@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -25,6 +28,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 
 public class LoginActivirty extends AppCompatActivity {
     private TextView btnToSignUp;
@@ -56,6 +64,10 @@ public class LoginActivirty extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!networkConnected(LoginActivirty.this)) {
+                    Toast.makeText(LoginActivirty.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String strEmail=email.getText().toString();
                 String strPassword=password.getText().toString();
                 if(strEmail.isEmpty()){
@@ -82,7 +94,6 @@ public class LoginActivirty extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     startActivity(new Intent(LoginActivirty.this,MainActivity.class));
                                     Toast.makeText(LoginActivirty.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                    getUserName();
                                     finish();
                                 }
                                 else{
@@ -96,28 +107,17 @@ public class LoginActivirty extends AppCompatActivity {
 
     }
 
-    private void getUserName() {
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("User");
-        reference.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name=snapshot.child("name").getValue(String.class);
-                String email=snapshot.child("email").getValue(String.class);
-                UserDatabaseHelper db= new UserDatabaseHelper(LoginActivirty.this);
-                Cursor cursor = db.getAllData();
-                if(cursor.getCount()>0){
-                    Toast.makeText(LoginActivirty.this, Integer.toString(cursor.getCount()), Toast.LENGTH_SHORT).show();
-                    db.EditIntoTable("1",name,email,"0","0");
-                }else{
-                    db.InsertIntoTable("1",name,email,"0","0");
-                }
-                cursor.close();
-            }
+    private boolean networkConnected(Context ctx) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-            }
-        });
+        if ((wifiConn != null && wifiConn.isConnected() && wifiConn.isAvailable()) || (mobileConn != null && mobileConn.isConnected() && mobileConn.isAvailable())) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

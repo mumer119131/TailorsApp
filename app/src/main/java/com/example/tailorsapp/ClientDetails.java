@@ -3,12 +3,17 @@ package com.example.tailorsapp;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItem;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,14 +22,16 @@ import android.widget.Toast;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
 
+import java.util.Objects;
+
 public class ClientDetails extends AppCompatActivity {
     String id;
     DatabaseHelper db;
     TextView dateTV,phoneTV,armTV,legTV,chestTV,neckTV,frontTV,backTV,clientName,idTV,fatherTV;
     Cursor cursorData;
     ImageView btnBack;
-    Button btnEdit,btnDelete;
     String scale="inches";
+    Toolbar toolbar;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -40,6 +47,12 @@ public class ClientDetails extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.client_details_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_details);
@@ -51,8 +64,8 @@ public class ClientDetails extends AppCompatActivity {
         SharedPreferences preferences = this.getSharedPreferences("SCALE",MODE_PRIVATE);
         scale=preferences.getString("SCALEVALUE","");
 
-
-        btnBack =findViewById(R.id.backBtnClientDetails);
+        toolbar = findViewById(R.id.toolbar_client_details);
+        setSupportActionBar(toolbar);
         dateTV=findViewById(R.id.dateTV);
         phoneTV=findViewById(R.id.phoneTV);
         armTV=findViewById(R.id.armTV);
@@ -64,9 +77,6 @@ public class ClientDetails extends AppCompatActivity {
         clientName=findViewById(R.id.clientName);
         idTV=findViewById(R.id.idTV);
         fatherTV = findViewById(R.id.fatherTV);
-        btnEdit = findViewById(R.id.btnEdit);
-        btnDelete=findViewById(R.id.btnConfirm);
-
 
         cursorData = fetchData();
         String phone = "";
@@ -109,12 +119,7 @@ public class ClientDetails extends AppCompatActivity {
         clientName.setText(name);
         dateTV.setText(date);
         fatherTV.setText(fatherName);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
         String finalName = name;
         String finalId = id;
         String finalFatherName = fatherName;
@@ -125,56 +130,69 @@ public class ClientDetails extends AppCompatActivity {
         String finalFront = front;
         String finalBack = back;
         String finalPhone = phone;
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(ClientDetails.this,EditClient.class);
-            i.putExtra("Name", finalName);
-            i.putExtra("ID", finalId);
-            i.putExtra("Father", finalFatherName);
-            i.putExtra("leg", finalLeg);
-            i.putExtra("Arm", finalArm);
-            i.putExtra("Chest", finalChest);
-            i.putExtra("Neck", finalNeck);
-            i.putExtra("FRONT", finalFront);
-            i.putExtra("back", finalBack);
-            i.putExtra("Phone", finalPhone);
-            startActivityForResult(i,2);
-        }
-    });
-        String finalId1 = id;
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(ClientDetails.this);
-            builder.setTitle("Delete");
-            builder.setCancelable(false);
-            builder.setMessage("Are you sure to delete the client ?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            DeleteAnitem(finalId1);
-                            Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(ClientDetails.this,MainActivity.class);
-                            i.putExtra("FRAG","CLIENTS");
-                            startActivity(i);
-                            finish();
-                        }
-                    });
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-         AlertDialog alertDialog = builder.create();
-         alertDialog.show();
 
-        }
-    });
+        String finalId1 = id;
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.edit_icon:
+                        Intent i = new Intent(ClientDetails.this,EditClient.class);
+                        i.putExtra("Name", finalName);
+                        i.putExtra("ID", finalId);
+                        i.putExtra("Father", finalFatherName);
+                        i.putExtra("leg", finalLeg);
+                        i.putExtra("Arm", finalArm);
+                        i.putExtra("Chest", finalChest);
+                        i.putExtra("Neck", finalNeck);
+                        i.putExtra("FRONT", finalFront);
+                        i.putExtra("back", finalBack);
+                        i.putExtra("Phone", finalPhone);
+                        startActivityForResult(i,2);
+                        break;
+                    case R.id.delete_icon:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ClientDetails.this);
+                        builder.setTitle("Delete");
+                        builder.setCancelable(false);
+                        builder.setMessage("Are you sure to delete the client ?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        DeleteAnitem(finalId1);
+                                        Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
+                                        Intent i = new Intent(ClientDetails.this,MainActivity.class);
+                                        i.putExtra("FRAG","CLIENTS");
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        break;
+                }
+            return true;
+            }
+        });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
     }
+
+
+
 
     private Cursor fetchData() {
         db =new DatabaseHelper(ClientDetails.this);
@@ -188,5 +206,6 @@ public class ClientDetails extends AppCompatActivity {
         db.DeleteDataByID(Integer.parseInt(id));
 
     }
+
 
 }

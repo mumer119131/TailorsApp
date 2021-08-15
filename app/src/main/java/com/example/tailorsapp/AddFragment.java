@@ -88,7 +88,18 @@ public class AddFragment extends Fragment {
         } else if (TextUtils.isEmpty(Back)) {
             etBackSide.setError("Enter the Back Length");
             etBackSide.requestFocus();
-        } else {
+        } else if(Name.contains(".") ||Name.contains("/") ||Name.contains("\\") ||Name.contains("?") ||Name.contains("<") ||Name.contains(">") ||Name.contains("|") ){
+            etName.setError("Client name should not contain following characters:\n\\/.?<>|");
+            etName.requestFocus();
+        }else if(Name.length()<5){
+            etName.setError("Name must contain at least 5 characters");
+            etName.requestFocus();
+        }
+        else if(FatherName.length()<5){
+            etFather.setError("Father name must contain at least 5 characters");
+            etFather.requestFocus();
+        }
+        else {
             boolean result = databaseHelper.insert_in_clients(Name, Phone, Leg, Arm, Chest, Neck, Front, Back, currentDate, FatherName);
             if (result) {
                 Toast.makeText(getActivity(), "Client Data Saved", Toast.LENGTH_SHORT).show();

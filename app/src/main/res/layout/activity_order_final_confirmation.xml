@@ -22,7 +22,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/priceET"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -41,7 +44,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/typeET"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
