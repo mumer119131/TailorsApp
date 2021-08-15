@@ -162,7 +162,7 @@ public class ClientDetails extends AppCompatActivity {
                                         DeleteAnitem(finalId1);
                                         Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(ClientDetails.this,MainActivity.class);
-                                        i.putExtra("FRAG","CLIENTS");
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(i);
                                         finish();
                                     }

@@ -92,8 +92,6 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
                             orderCompletedChange(model.getIndexNo());
                             list.remove(position);
                             notifyItemRemoved(position);
-
-
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

@@ -53,7 +53,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private PieChart pieChart;
-    private TextView userName, totalClients, noClients, noClientBackup, noOrderedAdded, noOfOrdersInBackup, noOfTotalOrders;
+    private TextView userName, totalClients, noClients, noClientBackup, noOrderedAdded, noOfOrdersInBackup, noOfTotalOrders,emailTV;
     private Button signOut;
     private FirebaseAuth mAuth;
     private String name, email, clients_in_backup, orders_in_backup;
@@ -74,22 +74,12 @@ public class HomeFragment extends Fragment {
         signOut = root.findViewById(R.id.btnSignOut);
         noOfTotalOrders = root.findViewById(R.id.totalOrderLocal);
         mAuth = FirebaseAuth.getInstance();
+        emailTV = root.findViewById(R.id.emailTV);
         user_db = new UserDatabaseHelper(getActivity());
 
-        //get username
-        getUserName();
 
 
-        //Setup User Name and Clients Data
-        Cursor cursor = user_db.getAllData();
-        if (cursor.moveToFirst()) {
-            name = cursor.getString(1);
-            email = cursor.getString(2);
 
-        }
-
-        userName.setText(name);
-        cursor.close();
 
         updateBackupClientsNo();
         getBackupClientsNo();
@@ -134,6 +124,16 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        //Setup User Name and Clients Data
+        Cursor cursor = user_db.getAllData();
+        if (cursor.moveToFirst()) {
+            name = cursor.getString(1);
+            email = cursor.getString(2);
+        }
+
+        userName.setText(name);
+        emailTV.setText(email);
+        cursor.close();
 
         return root;
 
@@ -216,29 +216,5 @@ public class HomeFragment extends Fragment {
         return count;
     }
 
-    public void getUserName() {
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("User");
-        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = snapshot.child("name").getValue(String.class);
-                String email = snapshot.child("email").getValue(String.class);
 
-                if (!(user_db == null)) {
-                    Cursor cursor = user_db.getAllData();
-                    if (cursor.getCount() > 0) {
-                        user_db.EditIntoTable("1", name, email, "0", "0");
-                    } else {
-                        user_db.InsertIntoTable("1", name, email, "0", "0");
-                    }
-                    cursor.close();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

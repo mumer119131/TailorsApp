@@ -61,8 +61,8 @@ public class BackupFragment extends Fragment {
                     return;
                 }
                 Cursor dataCursor = fetchData();
+                    pushData(dataCursor);
 
-                pushData(dataCursor);
 
 
             }

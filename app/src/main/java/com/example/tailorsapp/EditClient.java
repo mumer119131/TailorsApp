@@ -95,7 +95,11 @@ public class EditClient extends AppCompatActivity {
                 } else if (nameData.contains(".") || nameData.contains("/") || nameData.contains("\\") || nameData.contains("?") || nameData.contains("<") || nameData.contains(">") || nameData.contains("|")) {
                     name.setError("Client name should not contain following characters:\n\\/.?<>|");
                     name.requestFocus();
-                } else if (nameData.length() < 5) {
+                }else if (fatherData.contains(".") || fatherData.contains("/") || fatherData.contains("\\") || fatherData.contains("?") || fatherData.contains("<") || fatherData.contains(">") || fatherData.contains("|")) {
+                    fatherName.setError("Client name should not contain following characters:\n\\/.?<>|");
+                    fatherName.requestFocus();
+                }
+                else if (nameData.length() < 5) {
                     name.setError("Name must contain at least 5 characters");
                     name.requestFocus();
                 } else if (fatherData.length() < 5) {

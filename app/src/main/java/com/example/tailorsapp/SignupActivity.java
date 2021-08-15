@@ -3,6 +3,7 @@ package com.example.tailorsapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText name,email,pass,confirmPass;
     private Button signupBtn;
     private FirebaseAuth mAUTH;
+    private UserDatabaseHelper user_db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class SignupActivity extends AppCompatActivity {
         confirmPass=findViewById(R.id.etSignUpConfirmPassword);
         signupBtn=findViewById(R.id.btnSignup);
         mAUTH=FirebaseAuth.getInstance();
+        user_db = new UserDatabaseHelper(this);
+        ProgressDialog progressDialog=new ProgressDialog(this);
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +71,9 @@ public class SignupActivity extends AppCompatActivity {
 //                    Toast.makeText(SignupActivity.this, "Internet not working", Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
+                progressDialog.setMessage("Logging In");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 String strName = name.getText().toString().trim();
                 String strEmail=email.getText().toString().trim();
                 String strPassword=pass.getText().toString().trim();
@@ -94,7 +102,7 @@ public class SignupActivity extends AppCompatActivity {
                 if(!(strPassword.equals(strConfirmPassword))){
                     Toast.makeText(SignupActivity.this, "Password does not matches", Toast.LENGTH_SHORT).show();
                 }
-                InsertDataBase(strName,strEmail,strPassword);
+                InsertDataBase(strName,strEmail,strPassword,progressDialog);
 
              }
         });
@@ -109,7 +117,7 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    private void InsertDataBase(String userName,String userEmail,String userPassword){
+    private void InsertDataBase(String userName, String userEmail, String userPassword, ProgressDialog progressDialog){
         mAUTH.createUserWithEmailAndPassword(userEmail,userPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -121,35 +129,23 @@ public class SignupActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                startActivity(new Intent(SignupActivity.this, LoginActivirty.class));
-                                                login(userEmail,userPassword);
+                                                startActivity(new Intent(SignupActivity.this,LoginActivirty.class));
+
                                                 Toast.makeText(SignupActivity.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SignupActivity.this, "Login to your account", Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
 
                                                 finish();
                                             }
                                             else
                                             Toast.makeText(SignupActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
                                         }
                                     });
                         }
                         else
                             Toast.makeText(SignupActivity.this, "User Already Exist with this Email", Toast.LENGTH_SHORT).show();
-                    }
-
-                    private void login(String userEmail, String userPassword) {
-                        mAUTH.signInWithEmailAndPassword(userEmail,userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    LoginActivirty obj = new LoginActivirty();
-                                    startActivity(new Intent(SignupActivity.this,MainActivity.class));
-                                    finish();
-                                }
-                                else{
-                                    Toast.makeText(SignupActivity.this, "Failed to Login", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                             progressDialog.dismiss();
                     }
                 });
     }

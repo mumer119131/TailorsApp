@@ -91,7 +91,11 @@ public class AddFragment extends Fragment {
         } else if(Name.contains(".") ||Name.contains("/") ||Name.contains("\\") ||Name.contains("?") ||Name.contains("<") ||Name.contains(">") ||Name.contains("|") ){
             etName.setError("Client name should not contain following characters:\n\\/.?<>|");
             etName.requestFocus();
-        }else if(Name.length()<5){
+        }else if(FatherName.contains(".") ||FatherName.contains("/") ||FatherName.contains("\\") ||FatherName.contains("?") ||FatherName.contains("<") ||FatherName.contains(">") ||FatherName.contains("|") ){
+            etFather.setError("Client FatherName should not contain following characters:\n\\/.?<>|");
+            etFather.requestFocus();
+        }
+        else if(Name.length()<5){
             etName.setError("Name must contain at least 5 characters");
             etName.requestFocus();
         }

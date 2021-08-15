@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,6 +27,8 @@ public class FragmentCompletedOrders extends Fragment {
     DisplayOrdersAdapter adapter;
     LinearLayoutManager manager;
     SwipeRefreshLayout refreshLayout;
+
+    
 
     @Nullable
     @Override
@@ -75,6 +78,10 @@ public class FragmentCompletedOrders extends Fragment {
         }
         else
             Toast.makeText(getActivity(), "No Data Present", Toast.LENGTH_SHORT).show();
+    }
+    public void update_data(){
+        adapter.notifyDataSetChanged();
+        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
     }
 }
 
