@@ -1,14 +1,12 @@
 package com.example.tailorsapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.Menu;
 import android.widget.TextView;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
@@ -18,9 +16,15 @@ public class OrderConfirmationDetails extends AppCompatActivity {
     DatabaseHelper db;
     TextView dateTV,phoneTV,armTV,legTV,chestTV,neckTV,frontTV,backTV,clientName,idTV,fatherTV;
     Cursor cursorData;
-    ImageView btnBack;
-    Button btnConfirm;
     String scale="inches";
+    Toolbar toolbar;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.order_confirmation_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +38,8 @@ public class OrderConfirmationDetails extends AppCompatActivity {
         scale=preferences.getString("SCALEVALUE","");
 
 
-        btnBack =findViewById(R.id.backBtnClientDetails);
+        toolbar = findViewById(R.id.toolbar_order_details);
+        setSupportActionBar(toolbar);
         dateTV=findViewById(R.id.dateTV);
         phoneTV=findViewById(R.id.phoneTV);
         armTV=findViewById(R.id.armTV);
@@ -46,7 +51,6 @@ public class OrderConfirmationDetails extends AppCompatActivity {
         clientName=findViewById(R.id.clientName);
         idTV=findViewById(R.id.idTV);
         fatherTV = findViewById(R.id.fatherTV);
-        btnConfirm = findViewById(R.id.btnConfirm);
 
 
         cursorData = fetchData();
@@ -76,43 +80,40 @@ public class OrderConfirmationDetails extends AppCompatActivity {
             fatherName = cursorData.getString(10);
 
         }
+        assert cursorData != null;
         cursorData.close();
 
 
         idTV.setText(id);
         phoneTV.setText(phone);
-        armTV.setText(arm+" "+scale);
-        legTV.setText(leg+" "+scale);
-        chestTV.setText(chest+" "+scale);
-        neckTV.setText(neck+" "+scale);
-        frontTV.setText(front+" "+scale);
-        backTV.setText(back+" "+scale);
+        armTV.setText(arm);
+        legTV.setText(leg);
+        chestTV.setText(chest);
+        neckTV.setText(neck);
+        frontTV.setText(front);
+        backTV.setText(back);
         clientName.setText(name);
         dateTV.setText(date);
         fatherTV.setText(fatherName);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
         String finalId = id;
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(OrderConfirmationDetails.this,OrderFinalConfirmation.class);
-            i.putExtra("clientID", finalId);
-            startActivity(i);
+    toolbar.setOnMenuItemClickListener(item -> {
+         if(item.getItemId() == R.id.confirmOrderMenu){
+                Intent i = new Intent(OrderConfirmationDetails.this,OrderFinalConfirmation.class);
+                i.putExtra("clientID", finalId);
+                startActivity(i);
+
         }
+        return true;
     });
+    toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private Cursor fetchData() {
         db =new DatabaseHelper(OrderConfirmationDetails.this);
         int ID=Integer.parseInt(id);
-        Cursor cursor = db.getDatabyID(ID);
 
-        return cursor;
+        return db.getDatabyID(ID);
     }
 }

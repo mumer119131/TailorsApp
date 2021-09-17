@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                new HomeFragment()).commit();
+                new HomeFragment(),"HomeFrag").commit();
     }
 
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                   getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,
-                          selectedFragment).commit();
+                          selectedFragment,"ClientsFrag").commit();
                     return true;
                 }
             };

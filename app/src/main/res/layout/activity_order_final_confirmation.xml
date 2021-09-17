@@ -45,6 +45,7 @@
             android:id="@+id/typeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             android:lines="1"
             android:maxLines="1" />
 
@@ -52,10 +53,12 @@
 
     <TextView
         android:id="@+id/deliveryDateTV"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:textSize="20sp" />
+        android:textColor="#914747"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/btnTimePicker"
@@ -85,7 +88,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/futherDetailsTV"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

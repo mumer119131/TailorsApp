@@ -3,12 +3,7 @@
     <string name="skip"><u>skip</u></string>
 
 
-    <array name="measurement_scales">
-        <item>inch</item>
-        <item>feet</item>
-        <item>mm</item>
-        <item>cm</item>
-    </array>
+    <string name="warning"><b><u>Warning!</u></b></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

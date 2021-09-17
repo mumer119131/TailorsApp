@@ -16,10 +16,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
+import com.example.tailorsapp.RoomDataBase.Client;
+import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 
 import java.util.ArrayList;
 
@@ -29,33 +33,43 @@ public class ClientsFragment extends Fragment {
     ClientsAdapter adapter;
     LinearLayoutManager manager;
     ArrayList<ClientModel> list;
-    TextView userName,totalClientsTV,noClients;
+    TextView userName, totalClientsTV, noClients;
     LinearLayout recycleLinearLayout;
     int totalClients;
     View clientsView;
+    private ClientViewModel clientViewModel;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ClientsFragment frgInstance = new ClientsFragment();
+        getFragmentManager().beginTransaction().detach(frgInstance).attach(frgInstance).commit();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup root= (ViewGroup) inflater.inflate(R.layout.activity_clients_fragment,container,false);
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.activity_clients_fragment, container, false);
         list = new ArrayList<>();
         manager = new LinearLayoutManager(getActivity());
         recyclerView = root.findViewById(R.id.rvClients);
         recyclerView.setLayoutManager(manager);
-        userName=root.findViewById(R.id.clientName);
+        userName = root.findViewById(R.id.clientName);
         totalClientsTV = root.findViewById(R.id.totalClients);
         noClients = root.findViewById(R.id.noClientsFrag);
         recycleLinearLayout = root.findViewById(R.id.linearLayoutClients);
         clientsView = root.findViewById(R.id.clientsView);
         searchView = root.findViewById(R.id.searchClients);
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
 
         SharedPreferences preferences = this.getActivity().getSharedPreferences("Name", Context.MODE_PRIVATE);
-        String Name = preferences.getString("UserName","");
+        String Name = preferences.getString("UserName", "");
         userName.setText(Name);
 
         FetchData();
         String strClients = Integer.toString(totalClients);
-        totalClientsTV.setText(" ("+strClients+")");
+        totalClientsTV.setText(" (" + strClients + ")");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -74,22 +88,28 @@ public class ClientsFragment extends Fragment {
     }
 
     private void FetchData() {
-        DatabaseHelper helper= new DatabaseHelper(getActivity());
-        Cursor data = helper.getAllData();
-        totalClients = data.getCount();
-        if(data.getCount()>0){
-            while(data.moveToNext()){
-                list.add(new ClientModel(data.getString(1), data.getString(0)));
+
+        clientViewModel.getAllClients().observe(getActivity(),clients -> {
+
+            list.clear();
+
+
+            for(Client client: clients){
+
+                list.add(new ClientModel(client.getName(),client.getId()+""));
             }
-            adapter = new ClientsAdapter(getActivity(),list);
-            recyclerView.setAdapter(adapter);
-        }else{
-            noClients.setVisibility(View.VISIBLE);
-            recycleLinearLayout.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.GONE);
-            clientsView.setVisibility(View.GONE);
-            searchView.setVisibility(View.GONE);
-        }
+            if (list.size() > 0) {
+                adapter = new ClientsAdapter(getActivity(),list);
+                recyclerView.setAdapter(adapter);
+            } else {
+                noClients.setVisibility(View.VISIBLE);
+                recycleLinearLayout.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                clientsView.setVisibility(View.GONE);
+                searchView.setVisibility(View.GONE);
+            }
+        });
+
     }
 
 

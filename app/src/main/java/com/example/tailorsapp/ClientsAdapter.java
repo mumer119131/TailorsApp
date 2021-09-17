@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.tailorsapp.PersonModel.OrderDisplayModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +106,13 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.Holder> 
 
         }
     }
+
+    public void refreshData(ArrayList<ClientModel> newData){
+        this.list.clear();
+        list.addAll(newData);
+        notifyDataSetChanged();
+    }
+
 
 
 

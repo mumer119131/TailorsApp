@@ -11,8 +11,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
+import com.example.tailorsapp.RoomDataBase.Client;
+import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +26,7 @@ public class AddFragment extends Fragment {
     private Button btnSave;
     private DatabaseHelper databaseHelper;
     private String currentDate;
+    private ClientViewModel clientViewModel;
 
     @Nullable
     @Override
@@ -41,6 +45,8 @@ public class AddFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         currentDate = sdf.format(new Date());
         databaseHelper=new DatabaseHelper(getActivity());
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+
 
          btnSave.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -104,8 +110,8 @@ public class AddFragment extends Fragment {
             etFather.requestFocus();
         }
         else {
-            boolean result = databaseHelper.insert_in_clients(Name, Phone, Leg, Arm, Chest, Neck, Front, Back, currentDate, FatherName);
-            if (result) {
+            Client client = new Client(Name,FatherName,Phone,Leg,Arm,Chest,Neck,Front,Back,currentDate);
+            clientViewModel.insertClients(client);
                 Toast.makeText(getActivity(), "Client Data Saved", Toast.LENGTH_SHORT).show();
                 etName.setText("");
                 etPhone.setText("");
@@ -116,11 +122,6 @@ public class AddFragment extends Fragment {
                 etNeck.setText("");
                 etFrontSide.setText("");
                 etBackSide.setText("");
-
-            } else
-                Toast.makeText(getActivity(), "Data Saving Failed", Toast.LENGTH_SHORT).show();
-
-
         }
     }
 }

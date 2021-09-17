@@ -1,9 +1,9 @@
 package com.example.tailorsapp.PersonModel;
 
 public class OrderDisplayModel {
-    private String name,type,price,dateOrdered,dateReceived,indexNo,status,furtherDetails;
+    private String name, type, price, dateOrdered, dateReceived, indexNo, status, furtherDetails, client_id;
 
-    public OrderDisplayModel(String name, String type, String price, String dateOrdered, String dateReceived, String indexNo,String status,String furtherDetails) {
+    public OrderDisplayModel(String name, String type, String price, String dateOrdered, String dateReceived, String indexNo, String status, String furtherDetails, String client_id) {
         this.name = name;
         this.type = type;
         this.price = price;
@@ -12,22 +12,7 @@ public class OrderDisplayModel {
         this.indexNo = indexNo;
         this.status = status;
         this.furtherDetails = furtherDetails;
-    }
-
-    public String getFurtherDetails() {
-        return furtherDetails;
-    }
-
-    public void setFurtherDetails(String furtherDetails) {
-        this.furtherDetails = furtherDetails;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.client_id = client_id;
     }
 
     public String getName() {
@@ -76,5 +61,29 @@ public class OrderDisplayModel {
 
     public void setIndexNo(String indexNo) {
         this.indexNo = indexNo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getFurtherDetails() {
+        return furtherDetails;
+    }
+
+    public void setFurtherDetails(String furtherDetails) {
+        this.furtherDetails = furtherDetails;
+    }
+
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+        this.client_id = client_id;
     }
 }

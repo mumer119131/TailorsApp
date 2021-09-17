@@ -20,7 +20,9 @@
     <style name="CollapsingToolbar">
 
         <item name="android:textColorPrimary">@color/white</item>
+    </style>
 
-
+    <style name="SheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:colorBackground">@android:color/transparent</item>
     </style>
 </resources>

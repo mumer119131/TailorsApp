@@ -1,15 +1,35 @@
 package com.example.tailorsapp;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import java.util.zip.CheckedOutputStream;
+
+@Entity(tableName = "clientsData")
 public class ClientsAllDataModel {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "userID")
     String id;
+    @ColumnInfo(name = "userName")
     String name;
+    @ColumnInfo(name = "fatherName")
     String fatherName;
+    @ColumnInfo(name = "phoneNumber")
     String phoneNumber;
+    @ColumnInfo(name = "leg")
     String leg;
+    @ColumnInfo(name = "arm")
     String Arm;
+    @ColumnInfo(name = "chest")
     String chest;
+    @ColumnInfo(name = "neck")
     String neck;
+    @ColumnInfo(name = "frontSide")
     String frontSide;
+    @ColumnInfo(name = "backSide")
+    String backSide;
+    @ColumnInfo(name = "date")
     String date;
 
     public String getDate() {
@@ -114,5 +134,4 @@ public class ClientsAllDataModel {
         this.date = date;
     }
 
-    String backSide;
 }

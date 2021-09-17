@@ -79,31 +79,28 @@ public class SignupActivity extends AppCompatActivity {
                 String strPassword=pass.getText().toString().trim();
                 String strConfirmPassword=confirmPass.getText().toString().trim();
 
-                if(TextUtils.isEmpty(strEmail)){
-                    name.setError("Please enter your name");
+                if(TextUtils.isEmpty(strName)){
+                    name.setError("Please enter name");
                     name.requestFocus();
-                }
-                if(TextUtils.isEmpty(strEmail)){
+                }else if(strName.length()<5 || strName.length()>15){
+                    name.setError("Name length must be between 5-15 letters");
+                }else if(TextUtils.isEmpty(strEmail)){
                     email.setError("Please enter your email");
                     email.requestFocus();
-                }
-                if(!(Patterns.EMAIL_ADDRESS.matcher(strEmail).matches())){
+                }else if(!(Patterns.EMAIL_ADDRESS.matcher(strEmail).matches())){
                     email.setError("Please enter valid email address");
                     email.requestFocus();
-                }
-                if(TextUtils.isEmpty(strPassword)){
+                }else if(TextUtils.isEmpty(strPassword)){
                     pass.setError("Please enter your password");
                     pass.requestFocus();
-                }
-                if(TextUtils.isEmpty(strConfirmPassword)){
+                } else if(TextUtils.isEmpty(strConfirmPassword)){
                     confirmPass.setError("Please enter your confirm password");
                     confirmPass.requestFocus();
-                }
-                if(!(strPassword.equals(strConfirmPassword))){
+                }else if(!(strPassword.equals(strConfirmPassword))){
                     Toast.makeText(SignupActivity.this, "Password does not matches", Toast.LENGTH_SHORT).show();
+                }else {
+                    InsertDataBase(strName, strEmail, strPassword, progressDialog);
                 }
-                InsertDataBase(strName,strEmail,strPassword,progressDialog);
-
              }
         });
 

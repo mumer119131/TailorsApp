@@ -6,26 +6,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tailorsapp.BottomSheetDialog;
+import com.example.tailorsapp.ClientDetails;
 import com.example.tailorsapp.Database.OrderDataBaseHelper;
-import com.example.tailorsapp.FragmentCompletedOrders;
 import com.example.tailorsapp.PersonModel.OrderDisplayModel;
 import com.example.tailorsapp.R;
 
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 
@@ -35,8 +34,8 @@ import java.util.List;
 
 
 public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdapter.Holder> {
-    private Context context;
-    private List<OrderDisplayModel> list;
+    private final Context context;
+    private final List<OrderDisplayModel> list;
     String orderID;
 
     public DisplayOrdersAdapter(Context context, List<OrderDisplayModel> list) {
@@ -75,70 +74,164 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog();
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setCancelable(false);
-                String status = model.getStatus();
-                if(status.equals("Pending")){
-                    builder.setTitle(model.getName());
-                    String furtherDetails = model.getFurtherDetails();
-                    if(furtherDetails.equals("")){
-                        furtherDetails = "(No Further Details)";
+                com.google.android.material.bottomsheet.BottomSheetDialog bottomSheetDialog = new com.google.android.material.bottomsheet.BottomSheetDialog(context,R.style.SheetDialog);
+                View view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_layout,null);
+                TextView completedBS = view.findViewById(R.id.CompletedBS);
+                TextView furtherDetailsBS = view.findViewById(R.id.FurtherDetailsBS);
+                TextView deleteBS = view.findViewById(R.id.DeleteBS);
+                TextView clientDetailsBS = view.findViewById(R.id.clientDetailsBS);
+                ImageView statusImg = view.findViewById(R.id.statusImgBS);
+                bottomSheetDialog.setContentView(view);
+                bottomSheetDialog.show();
+                if(model.getStatus().equals("Completed")){
+                    completedBS.setText("Pending");
+                    statusImg.setImageResource(R.drawable.ic_baseline_cancel_24);
+                }
+                clientDetailsBS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(context, ClientDetails.class);
+                        i.putExtra("ID",model.getClient_id());
+                        context.startActivity(i);
+                        bottomSheetDialog.dismiss();
                     }
-                    builder.setMessage("("+furtherDetails+")\n\nIs this Order Completed");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            orderCompletedChange(model.getIndexNo());
-                            list.remove(position);
-                            notifyItemRemoved(position);
+                });
+
+                completedBS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setCancelable(false);
+                        String status = model.getStatus();
+                        if(status.equals("Pending")){
+                            builder.setTitle(model.getName());
+                            builder.setMessage("Is this Order Completed");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    orderCompletedChange(model.getIndexNo(),status);
+                                    list.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyItemRangeChanged(position,list.size());
+                                    notifyDataSetChanged();
+                                    Toast.makeText(context, model.getIndexNo(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }else{
+                            builder.setTitle(model.getName());
+                            builder.setMessage("Is this order still pending");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    orderCompletedChange(model.getIndexNo(),status);
+                                    list.remove(position);
+                                    notifyItemRemoved(position);
+                                    bottomSheetDialog.dismiss();
+                                }
+                            });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+
                         }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                        }
-                    });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                }
-                if(status.equals("Completed")){
-                    showDialog(model.getName(),model.getFurtherDetails());
-                }
+                    }
+                });
+                furtherDetailsBS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showFurtherDetails(position,model);
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                deleteBS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteOrder(position,model);
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+
             }
         });
 
     }
 
-    private void showDialog(String name, String furtherDetails) {
-        if(furtherDetails.equals("")){
-            furtherDetails = "No Further Details";
-        }
+    private void deleteOrder(int position, OrderDisplayModel model) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(false);
-        builder.setTitle(name);
-        builder.setMessage(furtherDetails);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle("Delete Order");
+        builder.setIcon(R.drawable.ic_baseline_warning_24);
+        builder.setMessage("Client Name "+model.getName()+"\n\nAre you sure to delete the order?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+                OrderDataBaseHelper db = new OrderDataBaseHelper(context);
+                db.DeleteDataByID(Integer.parseInt(model.getIndexNo()));
+                list.remove(position);
+                notifyItemRemoved(position);
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showFurtherDetails(int position, OrderDisplayModel model) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        builder.setTitle(model.getName());
+        if(model.getFurtherDetails().equals("")){
+            builder.setMessage("No Further Details");
+        }else {
+            builder.setMessage(model.getFurtherDetails());
+        }
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
 
     }
 
-    private void orderCompletedChange(String order_no) {
+    private void orderCompletedChange(String order_no,String status) {
         OrderDataBaseHelper helper = new OrderDataBaseHelper(context);
         Cursor cursor = helper.getDataByID(Integer.parseInt(order_no));
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String currentDate = sdf.format(new Date());
-        if(cursor.moveToFirst()) {
-            helper.EditDataIntoTable(Integer.parseInt(orderID), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), currentDate, "Completed", cursor.getString(8));
-            cursor.close();
+        if(status.equals("Pending")) {
+            if (cursor.moveToFirst()) {
+                helper.EditDataIntoTable(Integer.parseInt(orderID), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), currentDate, "Completed", cursor.getString(8));
+            }
+        }else{
+            if (cursor.moveToFirst()) {
+                helper.EditDataIntoTable(Integer.parseInt(orderID), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), currentDate, "Pending", cursor.getString(8));
+                Toast.makeText(context, "Database Updated", Toast.LENGTH_SHORT).show();
+            }
         }
+        cursor.close();
     }
 
 
@@ -161,9 +254,9 @@ public class DisplayOrdersAdapter extends RecyclerView.Adapter<DisplayOrdersAdap
         cardView = itemView.findViewById(R.id.cardViewOrders);
         }
     }
-    public void refreshData(List<OrderDisplayModel> list){
+    public void refreshData(List<OrderDisplayModel> newData){
         this.list.clear();
-        this.list.addAll(list);
+        list.addAll(newData);
         notifyDataSetChanged();
     }
 

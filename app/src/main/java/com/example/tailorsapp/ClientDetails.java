@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItem;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursorDriver;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,17 +23,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tailorsapp.Database.DatabaseHelper;
+import com.example.tailorsapp.Database.OrderDataBaseHelper;
+import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ClientDetails extends AppCompatActivity {
+
     String id;
-    DatabaseHelper db;
+    String phone = "";
+    String leg="";
+    String arm="";
+    String chest="";
+    String neck="";
+    String front="";
+    String back="";
+    String date="";
+    String fatherName = "";
+    String name = "";
+
     TextView dateTV,phoneTV,armTV,legTV,chestTV,neckTV,frontTV,backTV,clientName,idTV,fatherTV;
-    Cursor cursorData;
+
     ImageView btnBack;
     String scale="inches";
     Toolbar toolbar;
+    private ClientViewModel clientViewModel;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -77,48 +95,20 @@ public class ClientDetails extends AppCompatActivity {
         clientName=findViewById(R.id.clientName);
         idTV=findViewById(R.id.idTV);
         fatherTV = findViewById(R.id.fatherTV);
-
-        cursorData = fetchData();
-        String phone = "";
-        String leg="";
-        String arm="";
-        String chest="";
-        String neck="";
-        String front="";
-        String back="";
-        String date="";
-        String id="";
-        String fatherName = "";
-        String name = "";
-
-        if(cursorData != null && cursorData.moveToFirst()) {
-            id=cursorData.getString(0);
-            name = cursorData.getString(1);
-            phone = cursorData.getString(2);
-            leg = cursorData.getString(3);
-            arm = cursorData.getString(4);
-            chest = cursorData.getString(5);
-            neck = cursorData.getString(6);
-            front = cursorData.getString(7);
-            back = cursorData.getString(8);
-            date = cursorData.getString(9);
-            fatherName = cursorData.getString(10);
-
-               }
-        cursorData.close();
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
 
-        idTV.setText(id);
-        phoneTV.setText(phone);
-        armTV.setText(arm+" "+scale);
-        legTV.setText(leg+" "+scale);
-        chestTV.setText(chest+" "+scale);
-        neckTV.setText(neck+" "+scale);
-        frontTV.setText(front+" "+scale);
-        backTV.setText(back+" "+scale);
-        clientName.setText(name);
-        dateTV.setText(date);
-        fatherTV.setText(fatherName);
+
+
+
+        fetchData();
+
+
+
+
+
+
+
 
         String finalName = name;
         String finalId = id;
@@ -155,15 +145,17 @@ public class ClientDetails extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(ClientDetails.this);
                         builder.setTitle("Delete");
                         builder.setCancelable(false);
-                        builder.setMessage("Are you sure to delete the client ?")
+                        builder.setIcon(R.drawable.ic_baseline_warning_24);
+                        builder.setMessage("Are you sure to delete the client ?\n\n"+getString(R.string.warning)+"\n(By deleting client all the corresponding orders will also delete)")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         DeleteAnitem(finalId1);
+//                                        deleteOrders(finalId1);
                                         Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
-                                        Intent i = new Intent(ClientDetails.this,MainActivity.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(i);
+//                                        Intent i = new Intent(ClientDetails.this,MainActivity.class);
+//                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                        startActivity(i);
                                         finish();
                                     }
                                 });
@@ -191,19 +183,61 @@ public class ClientDetails extends AppCompatActivity {
 
     }
 
+    private void deleteOrders(String finalId1) {
+        OrderDataBaseHelper db = new OrderDataBaseHelper(this);
+        Cursor cursor = db.GetAllData();
+        if(cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                if(cursor.getString(1).equals(finalId1)){
+                    int id = Integer.parseInt(cursor.getString(0));
+                    db.DeleteDataByID(id);
+                }
+            }
+        }
+        cursor.close();
+
+    }
 
 
+    private void fetchData() {
 
-    private Cursor fetchData() {
-        db =new DatabaseHelper(ClientDetails.this);
-        int ID=Integer.parseInt(id);
-        Cursor cursor = db.getDatabyID(ID);
+        clientViewModel.getClientByID(Integer.parseInt(id)).observe(this,client -> {
 
-        return cursor;
+            if (client != null) {
+
+                id = client.getId() + "";
+                name = client.getName();
+                phone = client.getPhoneNumber();
+                leg = client.getLeg();
+                arm = client.getArm();
+                chest = client.getChest();
+                neck = client.getNeck();
+                front = client.getFrontSide();
+                back = client.getBackSide();
+                date = client.getDate();
+                fatherName = client.getFatherName();
+
+
+                idTV.setText(id);
+                phoneTV.setText(phone);
+                armTV.setText(arm + " " + scale);
+                legTV.setText(leg + " " + scale);
+                chestTV.setText(chest + " " + scale);
+                neckTV.setText(neck + " " + scale);
+                frontTV.setText(front + " " + scale);
+                backTV.setText(back + " " + scale);
+                clientName.setText(name);
+                dateTV.setText(date);
+                fatherTV.setText(fatherName);
+            }
+
+        });
+
+
     }
     private  void DeleteAnitem(String id){
-        DatabaseHelper db = new DatabaseHelper(ClientDetails.this);
-        db.DeleteDataByID(Integer.parseInt(id));
+
+      clientViewModel.deleteClient(Integer.parseInt(id));
 
     }
 
