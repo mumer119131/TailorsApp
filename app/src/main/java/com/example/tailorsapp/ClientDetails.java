@@ -3,31 +3,22 @@ package com.example.tailorsapp;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.ActionMenuItem;
-import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteCursorDriver;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tailorsapp.Database.DatabaseHelper;
-import com.example.tailorsapp.Database.OrderDataBaseHelper;
 import com.example.tailorsapp.RoomDataBase.ClientViewModel;
-
-import java.util.List;
-import java.util.Objects;
+import com.example.tailorsapp.RoomDataBase.OrderViewModel;
 
 public class ClientDetails extends AppCompatActivity {
 
@@ -129,16 +120,16 @@ public class ClientDetails extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.edit_icon:
                         Intent i = new Intent(ClientDetails.this,EditClient.class);
-                        i.putExtra("Name", finalName);
-                        i.putExtra("ID", finalId);
-                        i.putExtra("Father", finalFatherName);
-                        i.putExtra("leg", finalLeg);
-                        i.putExtra("Arm", finalArm);
-                        i.putExtra("Chest", finalChest);
-                        i.putExtra("Neck", finalNeck);
-                        i.putExtra("FRONT", finalFront);
-                        i.putExtra("back", finalBack);
-                        i.putExtra("Phone", finalPhone);
+                        i.putExtra("Name", name);
+                        i.putExtra("ID", id);
+                        i.putExtra("Father", fatherName);
+                        i.putExtra("leg", leg);
+                        i.putExtra("Arm", arm);
+                        i.putExtra("Chest", chest);
+                        i.putExtra("Neck", neck);
+                        i.putExtra("FRONT", front);
+                        i.putExtra("back", back);
+                        i.putExtra("Phone", phone);
                         startActivityForResult(i,2);
                         break;
                     case R.id.delete_icon:
@@ -151,11 +142,8 @@ public class ClientDetails extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         DeleteAnitem(finalId1);
-//                                        deleteOrders(finalId1);
+                                        deleteOrders(finalId1);
                                         Toast.makeText(ClientDetails.this, "Client Data Deleted", Toast.LENGTH_SHORT).show();
-//                                        Intent i = new Intent(ClientDetails.this,MainActivity.class);
-//                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                        startActivity(i);
                                         finish();
                                     }
                                 });
@@ -184,17 +172,8 @@ public class ClientDetails extends AppCompatActivity {
     }
 
     private void deleteOrders(String finalId1) {
-        OrderDataBaseHelper db = new OrderDataBaseHelper(this);
-        Cursor cursor = db.GetAllData();
-        if(cursor.getCount()>0){
-            while (cursor.moveToNext()){
-                if(cursor.getString(1).equals(finalId1)){
-                    int id = Integer.parseInt(cursor.getString(0));
-                    db.DeleteDataByID(id);
-                }
-            }
-        }
-        cursor.close();
+        OrderViewModel orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        orderViewModel.deleteByClientID(finalId1);
 
     }
 

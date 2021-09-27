@@ -1,7 +1,7 @@
 package com.example.tailorsapp;
 
-import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,78 +10,75 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.tailorsapp.Adapter.DisplayOrdersAdapter;
-import com.example.tailorsapp.Database.OrderDataBaseHelper;
 import com.example.tailorsapp.PersonModel.OrderDisplayModel;
+import com.example.tailorsapp.RoomDataBase.Order;
+import com.example.tailorsapp.RoomDataBase.OrderViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class FragmentCompletedOrders extends Fragment {
     private RecyclerView recyclerView;
     ArrayList<OrderDisplayModel> list;
     DisplayOrdersAdapter adapter;
     LinearLayoutManager manager;
-    SwipeRefreshLayout refreshLayout;
+    OrderViewModel orderViewModel;
+    LottieAnimationView noOrderAnim;
 
-    
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup root= (ViewGroup) inflater.inflate(R.layout.completed_orders_fragment,container,false);
 
-        refreshLayout = root.findViewById(R.id.swipeRefreshLayoutCompleted);
-        list= new ArrayList<>();
+        Log.i("onCreate","C");
+
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.completed_orders_fragment, container, false);
+
+
+        noOrderAnim = root.findViewById(R.id.emptyOrderCompleted);
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        list = new ArrayList<>();
         manager = new LinearLayoutManager(getActivity());
         recyclerView = root.findViewById(R.id.completedOrdersRV);
         recyclerView.setLayoutManager(manager);
 
+
+
         FetchData();
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-               adapter.notifyDataSetChanged();
-               refreshLayout.setRefreshing(false);
-            }
-        });
-
-
-
 
         return root;
     }
 
     private void FetchData() {
-        OrderDataBaseHelper helper = new OrderDataBaseHelper(getActivity());
-        Cursor cursor = helper.GetAllData();
-
-        if(cursor.getCount()>0){
-            while (cursor.moveToNext()){
-                String status = cursor.getString(7);
-                if(status.equals("Completed")){
-                    list.add(new OrderDisplayModel(cursor.getString(2),cursor.getString(4),cursor.getString(3),cursor.getString(5),cursor.getString(6),cursor.getString(0),cursor.getString(7),cursor.getString(8),cursor.getString(1)));
-
+        orderViewModel.getAllOrders().observe(getActivity(),orders -> {
+            list.clear();
+            if (orders != null) {
+                for (Order order : orders) {
+                    if(order.getSTATUS().equals("Completed"))
+                        list.add(new OrderDisplayModel(order.getNAME(), order.getTYPE(), order.getPRICE(), order.getDATE_ORDERED(), order.getDATE_RECEIVED(), Integer.toString(order.getORDER_ID()), order.getSTATUS(), order.getFURTHER_DETAILS(), order.getCLIENT_ID()));
                 }
+                if(list.size() == 0) {
+                    noOrderAnim.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }else{
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noOrderAnim.setVisibility(View.GONE);
+                }
+                adapter = new DisplayOrdersAdapter(getActivity(), list);
+                recyclerView.setAdapter(adapter);
+
             }
-            adapter = new DisplayOrdersAdapter(getActivity(),list);
-            recyclerView.setAdapter(adapter);
+        });
 
-
-
-
-        }
-        else
-            Toast.makeText(getActivity(), "No Data Present", Toast.LENGTH_SHORT).show();
-    }
-    public void update_data(){
-        adapter.notifyDataSetChanged();
-        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
     }
 }
 

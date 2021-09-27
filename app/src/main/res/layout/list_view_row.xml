@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="45dp"
             android:layout_marginRight="45dp"
-            android:fontFamily="@font/roboto_light"
+            android:fontFamily="sans-serif-condensed"
             android:padding="2dp"
             android:text="UserName"
             android:textSize="24sp" />
@@ -38,7 +38,7 @@
         android:id="@+id/userID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
+        android:fontFamily="@font/roboto_light"
         android:paddingLeft="45dp"
         android:text="id"
         android:textSize="12sp" />

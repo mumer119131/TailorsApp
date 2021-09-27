@@ -4,13 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.tailorsapp.MenuFragments.AddFragment;
+import com.example.tailorsapp.MenuFragments.BackupFragment;
+import com.example.tailorsapp.MenuFragments.ClientsFragment;
+import com.example.tailorsapp.MenuFragments.HomeFragment;
+import com.example.tailorsapp.MenuFragments.OrdersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 

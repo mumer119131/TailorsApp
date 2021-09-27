@@ -47,15 +47,32 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_baseline_person_24" />
 
-                <TextView
-                    android:id="@+id/clientName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Client Name"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Name" />
+
+                    <TextView
+                        android:id="@+id/clientName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Client Name"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -78,15 +95,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_baseline_format_list_numbered_24" />
 
-                <TextView
-                    android:id="@+id/idTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="ID"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="ID" />
+
+                    <TextView
+                        android:id="@+id/idTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="ID"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -109,15 +141,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_baseline_father" />
 
-                <TextView
-                    android:id="@+id/fatherTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Father Name"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Father Name" />
+
+                    <TextView
+                        android:id="@+id/fatherTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Father Name"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -141,15 +188,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_baseline_date_range_24" />
 
-                <TextView
-                    android:id="@+id/dateTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Date"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Date Registered" />
+
+                    <TextView
+                        android:id="@+id/dateTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Date"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -172,15 +234,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_baseline_local_phone_24" />
 
-                <TextView
-                    android:id="@+id/phoneTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Phone Number"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Phone Number" />
+
+                    <TextView
+                        android:id="@+id/phoneTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Phone Number"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -203,15 +280,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_arm_icon" />
 
-                <TextView
-                    android:id="@+id/armTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Arm"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Arm Length" />
+
+                    <TextView
+                        android:id="@+id/armTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Arm"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -234,15 +326,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_leg_icon" />
 
-                <TextView
-                    android:id="@+id/legTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Leg"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Leg Length" />
+
+                    <TextView
+                        android:id="@+id/legTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Leg"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -265,15 +372,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_chest_icon" />
 
-                <TextView
-                    android:id="@+id/chestTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Chest"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Chest" />
+
+                    <TextView
+                        android:id="@+id/chestTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Chest"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -296,15 +418,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_neck_icon" />
 
-                <TextView
-                    android:id="@+id/neckTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Neck"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Neck" />
+
+                    <TextView
+                        android:id="@+id/neckTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Neck"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -327,15 +464,30 @@
                     android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_front_side_icon" />
 
-                <TextView
-                    android:id="@+id/frontTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Front Side"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Front Side" />
+
+                    <TextView
+                        android:id="@+id/frontTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Front Side"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -360,15 +512,30 @@
                     app:srcCompat="@drawable/ic_back_side_icon"
                     tools:ignore="VectorDrawableCompat" />
 
-                <TextView
-                    android:id="@+id/backTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:text="Back Side"
-                    android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Back Side" />
+
+                    <TextView
+                        android:id="@+id/backTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="Back Side"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>

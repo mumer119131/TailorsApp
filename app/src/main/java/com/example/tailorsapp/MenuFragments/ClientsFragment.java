@@ -1,27 +1,27 @@
-package com.example.tailorsapp;
+package com.example.tailorsapp.MenuFragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tailorsapp.Database.DatabaseHelper;
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.tailorsapp.ClientModel;
+import com.example.tailorsapp.ClientsAdapter;
+import com.example.tailorsapp.R;
 import com.example.tailorsapp.RoomDataBase.Client;
 import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 
@@ -35,6 +35,7 @@ public class ClientsFragment extends Fragment {
     ArrayList<ClientModel> list;
     TextView userName, totalClientsTV, noClients;
     LinearLayout recycleLinearLayout;
+    LottieAnimationView noClientAnim;
     int totalClients;
     View clientsView;
     private ClientViewModel clientViewModel;
@@ -61,6 +62,7 @@ public class ClientsFragment extends Fragment {
         clientsView = root.findViewById(R.id.clientsView);
         searchView = root.findViewById(R.id.searchClients);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        noClientAnim = root.findViewById(R.id.emptyAnimClient);
 
 
         SharedPreferences preferences = this.getActivity().getSharedPreferences("Name", Context.MODE_PRIVATE);
@@ -90,10 +92,8 @@ public class ClientsFragment extends Fragment {
     private void FetchData() {
 
         clientViewModel.getAllClients().observe(getActivity(),clients -> {
-
             list.clear();
-
-
+            Log.i("Oberserver","Started");
             for(Client client: clients){
 
                 list.add(new ClientModel(client.getName(),client.getId()+""));
@@ -103,6 +103,7 @@ public class ClientsFragment extends Fragment {
                 recyclerView.setAdapter(adapter);
             } else {
                 noClients.setVisibility(View.VISIBLE);
+                noClientAnim.setVisibility(View.VISIBLE);
                 recycleLinearLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
                 clientsView.setVisibility(View.GONE);

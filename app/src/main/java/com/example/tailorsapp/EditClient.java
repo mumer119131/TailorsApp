@@ -1,6 +1,7 @@
 package com.example.tailorsapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tailorsapp.Database.DatabaseHelper;
+import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +31,7 @@ public class EditClient extends AppCompatActivity {
     private String str_neck = "";
     private String str_front = "";
     private String str_back = "";
+    private ClientViewModel clientViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class EditClient extends AppCompatActivity {
         backSide = findViewById(R.id.etBackSide);
         saveBtn=findViewById(R.id.btnToSave);
         backBtn = findViewById(R.id.backBtnEdit);
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
 
         getIntentExtras();
@@ -107,19 +109,16 @@ public class EditClient extends AppCompatActivity {
                     fatherName.requestFocus();
                 } else {
 
-                    DatabaseHelper helper = new DatabaseHelper(EditClient.this);
+
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                     String currentDate = sdf.format(new Date());
-                    Boolean update = helper.update_in_clients(Integer.parseInt(str_id), nameData, phoneData, legData, armData, chestData, neckData, frontData, backData, currentDate, fatherData);
-                    if (update) {
+                    clientViewModel.updateClientData(Integer.parseInt(str_id),nameData,fatherData,phoneData,armData,legData,chestData,neckData,frontData,backData,currentDate);
                         Toast.makeText(EditClient.this, "Updated", Toast.LENGTH_SHORT).show();
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("STATUS", "DONE");
                         setResult(RESULT_OK, returnIntent);
                         finish();
-                    } else {
-                        Toast.makeText(EditClient.this, "Failed Editing", Toast.LENGTH_SHORT).show();
-                    }
+
                 }
             }
         });

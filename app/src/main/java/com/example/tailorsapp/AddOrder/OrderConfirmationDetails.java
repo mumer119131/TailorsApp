@@ -1,7 +1,9 @@
-package com.example.tailorsapp;
+package com.example.tailorsapp.AddOrder;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -9,15 +11,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
 
-import com.example.tailorsapp.Database.DatabaseHelper;
+import com.example.tailorsapp.R;
+import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 
 public class OrderConfirmationDetails extends AppCompatActivity {
     String id;
-    DatabaseHelper db;
     TextView dateTV,phoneTV,armTV,legTV,chestTV,neckTV,frontTV,backTV,clientName,idTV,fatherTV;
     Cursor cursorData;
     String scale="inches";
     Toolbar toolbar;
+    ClientViewModel clientViewModel;
+    String phone = "";
+    String leg="";
+    String arm="";
+    String chest="";
+    String neck="";
+    String front="";
+    String back="";
+    String date="";
+    String fatherName = "";
+    String name = "";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,56 +64,16 @@ public class OrderConfirmationDetails extends AppCompatActivity {
         clientName=findViewById(R.id.clientName);
         idTV=findViewById(R.id.idTV);
         fatherTV = findViewById(R.id.fatherTV);
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
+        fetchData();
 
-        cursorData = fetchData();
-        String phone = "";
-        String leg="";
-        String arm="";
-        String chest="";
-        String neck="";
-        String front="";
-        String back="";
-        String date="";
-        String id="";
-        String fatherName = "";
-        String name = "";
-
-        if(cursorData != null && cursorData.moveToFirst()) {
-            id=cursorData.getString(0);
-            name = cursorData.getString(1);
-            phone = cursorData.getString(2);
-            leg = cursorData.getString(3);
-            arm = cursorData.getString(4);
-            chest = cursorData.getString(5);
-            neck = cursorData.getString(6);
-            front = cursorData.getString(7);
-            back = cursorData.getString(8);
-            date = cursorData.getString(9);
-            fatherName = cursorData.getString(10);
-
-        }
-        assert cursorData != null;
-        cursorData.close();
-
-
-        idTV.setText(id);
-        phoneTV.setText(phone);
-        armTV.setText(arm);
-        legTV.setText(leg);
-        chestTV.setText(chest);
-        neckTV.setText(neck);
-        frontTV.setText(front);
-        backTV.setText(back);
-        clientName.setText(name);
-        dateTV.setText(date);
-        fatherTV.setText(fatherName);
 
 
         String finalId = id;
     toolbar.setOnMenuItemClickListener(item -> {
          if(item.getItemId() == R.id.confirmOrderMenu){
-                Intent i = new Intent(OrderConfirmationDetails.this,OrderFinalConfirmation.class);
+                Intent i = new Intent(OrderConfirmationDetails.this, OrderFinalConfirmation.class);
                 i.putExtra("clientID", finalId);
                 startActivity(i);
 
@@ -110,10 +83,37 @@ public class OrderConfirmationDetails extends AppCompatActivity {
     toolbar.setNavigationOnClickListener(v -> finish());
     }
 
-    private Cursor fetchData() {
-        db =new DatabaseHelper(OrderConfirmationDetails.this);
-        int ID=Integer.parseInt(id);
+    private void fetchData() {
+        clientViewModel.getClientByID(Integer.parseInt(id)).observe(this,client -> {
 
-        return db.getDatabyID(ID);
+            if (client != null) {
+
+                id = client.getId() + "";
+                name = client.getName();
+                phone = client.getPhoneNumber();
+                leg = client.getLeg();
+                arm = client.getArm();
+                chest = client.getChest();
+                neck = client.getNeck();
+                front = client.getFrontSide();
+                back = client.getBackSide();
+                date = client.getDate();
+                fatherName = client.getFatherName();
+
+
+                idTV.setText(id);
+                phoneTV.setText(phone);
+                armTV.setText(arm);
+                legTV.setText(leg);
+                chestTV.setText(chest);
+                neckTV.setText(neck);
+                frontTV.setText(front);
+                backTV.setText(back);
+                clientName.setText(name);
+                dateTV.setText(date);
+                fatherTV.setText(fatherName);
+            }
+
+        });
     }
 }

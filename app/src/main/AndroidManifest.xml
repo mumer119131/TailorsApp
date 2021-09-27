@@ -13,9 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_foreground"
         android:supportsRtl="true"
         android:theme="@style/Theme.TailorsApp">
-        <activity android:name=".OrderFinalConfirmation"></activity>
-        <activity android:name=".OrderConfirmationDetails" />
-        <activity android:name=".AddOrder" />
+        <activity android:name=".AddOrder.OrderFinalConfirmation"></activity>
+        <activity android:name=".AddOrder.OrderConfirmationDetails" />
+        <activity android:name=".AddOrder.AddOrder" />
         <activity android:name=".EditClient" />
         <activity android:name=".ClientDetails" />
         <activity android:name=".SplashScreen">
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivirty" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
 
         <meta-data

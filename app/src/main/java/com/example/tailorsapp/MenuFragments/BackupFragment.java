@@ -1,12 +1,12 @@
-package com.example.tailorsapp;
+package com.example.tailorsapp.MenuFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +16,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.tailorsapp.Database.DatabaseHelper;
-import com.example.tailorsapp.Database.OrderDataBaseHelper;
+import com.example.tailorsapp.ClientsAllDataModel;
 import com.example.tailorsapp.PersonModel.OrderDataBackupModel;
+import com.example.tailorsapp.R;
+import com.example.tailorsapp.RoomDataBase.Client;
+import com.example.tailorsapp.RoomDataBase.ClientViewModel;
+import com.example.tailorsapp.RoomDataBase.Order;
+import com.example.tailorsapp.RoomDataBase.OrderViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,12 +37,20 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BackupFragment extends Fragment {
     ImageButton btnBackup;
     ImageButton btnRestore;
     FirebaseDatabase firebaseDatabase;
     ClientsAllDataModel model;
+    ClientViewModel clientViewModel;
+    OrderViewModel orderViewModel;
+    List<Client> client_list;
+    List<Order> order_list;
+    ArrayList<String> local_clients_id;
+    ArrayList<String> local_orders_id;
 
     @Nullable
     @Override
@@ -45,8 +60,28 @@ public class BackupFragment extends Fragment {
         btnBackup = root.findViewById(R.id.btnBackup);
         btnRestore = root.findViewById(R.id.btnRestore);
         firebaseDatabase = FirebaseDatabase.getInstance();
+        clientViewModel = new ViewModelProvider(getActivity()).get(ClientViewModel.class);
+        orderViewModel = new ViewModelProvider(getActivity()).get(OrderViewModel.class);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        client_list = new ArrayList<>();
+        order_list = new ArrayList<>();
+        local_clients_id = new ArrayList<>();
+        local_orders_id = new ArrayList<>();
+
+        clientViewModel.getAllClients().observe(getActivity(),clients -> {
+            local_clients_id.clear();
+            for (Client client:clients){
+                local_clients_id.add(client.getId()+"");
+            }
+        });
+        orderViewModel.getAllOrders().observe(getActivity(),orders -> {
+            local_orders_id.clear();
+            for (Order order:orders){
+                local_orders_id.add(order.getORDER_ID()+"");
+            }
+        });
+
 
 
         btnBackup.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +95,8 @@ public class BackupFragment extends Fragment {
                     Toast.makeText(getActivity(), "Internet not working", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Cursor dataCursor = fetchData();
-                    pushData(dataCursor);
+
+                    pushData();
 
 
 
@@ -91,11 +126,13 @@ public class BackupFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Restoring Data");
         progressDialog.show();
-        DatabaseHelper db = new DatabaseHelper(ctx);
         firebaseDatabase.getReference("Data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Clients").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
                 for (DataSnapshot snap : snapshot.getChildren()) {
+
                     String phone = snap.child("phoneNumber").getValue().toString();
                     String leg = snap.child("leg").getValue().toString();
                     String arm = snap.child("arm").getValue().toString();
@@ -107,13 +144,13 @@ public class BackupFragment extends Fragment {
                     String id = snap.child("id").getValue().toString();
                     String fatherName = snap.child("fatherName").getValue().toString();
                     String name = snap.child("name").getValue().toString();
-                    Cursor c = db.getDatabyID(Integer.parseInt(id));
-                    c.moveToFirst();
+                    Client client = new Client(name,fatherName,phone,leg,arm,chest,neck,front,back,date);
 
-                    if (c.getCount() > 0 && (c.getString(1).equals(name)) && (c.getString(10).equals(fatherName))) {
-                        continue;
-                    } else {
-                        db.insert_in_clients(name, phone, leg, arm, chest, neck, front, back, date, fatherName);
+                    client.id = Integer.parseInt(id);
+
+                    if (!local_clients_id.contains(id)) {
+                        Log.e("Client id is : ",id+" "+local_orders_id.toString());
+                           clientViewModel.insertClients(client);
                     }
 
                 }
@@ -131,7 +168,6 @@ public class BackupFragment extends Fragment {
     }
 
     private void restoreOrders() {
-        OrderDataBaseHelper helper = new OrderDataBaseHelper(getActivity());
         firebaseDatabase.getReference("Data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Orders").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -146,12 +182,11 @@ public class BackupFragment extends Fragment {
                     final String status = snap.child("status").getValue().toString();
                     final String furtherDetails = snap.child("furtherDetails").getValue().toString();
 
-                    Cursor cursor = helper.getDataByID(Integer.parseInt(orderID));
-                    cursor.moveToFirst();
-                    if(cursor.getCount()>0 && cursor.getString(1).equals(clientID) && cursor.getString(2).equals(name)){
-                        continue;
-                    }else{
-                        helper.InsertDataIntoTable(Integer.parseInt(clientID),name,price,type,dateOrdered,dateDelivered,status,furtherDetails);
+                    Order order = new Order(clientID,name,price,type,dateOrdered,dateDelivered,status,furtherDetails);
+                    order.ORDER_ID = Integer.parseInt(orderID);
+
+                    if(!local_orders_id.contains(orderID)) {
+                        orderViewModel.insertOrder(order);
                     }
                 }
             }
@@ -163,68 +198,79 @@ public class BackupFragment extends Fragment {
         });
     }
 
-    private void pushData(Cursor dataCursor) {
+    public void pushData() {
+        clientViewModel.getAllClients().observe(getActivity(),clients -> {
+            if(clients != null){
+                for (Client client:clients){
+                    client_list.add(client);
+                }
+            }
+        });
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Backup Data");
         progressDialog.show();
-        if (dataCursor.moveToFirst()) {
-
-            do {
-                final String phone = dataCursor.getString(2);
-                final String leg = dataCursor.getString(3);
-                final String arm = dataCursor.getString(4);
-                final String chest = dataCursor.getString(5);
-                final String neck = dataCursor.getString(6);
-                final String front = dataCursor.getString(7);
-                final String back = dataCursor.getString(8);
-                final String date = dataCursor.getString(9);
-                final String id = dataCursor.getString(0);
-                final String fatherName = dataCursor.getString(10);
-                final String name = dataCursor.getString(1);
+        if (client_list.size()>0) {
+            for(Client client:client_list) {
+                final String phone = client.getPhoneNumber();
+                final String leg = client.getLeg();
+                final String arm = client.getArm();
+                final String chest = client.getChest();
+                final String neck = client.getNeck();
+                final String front = client.getFrontSide();
+                final String back = client.getBackSide();
+                final String date = client.getDate();
+                final String id = Integer.toString(client.getId());
+                final String fatherName = client.getFatherName();
+                final String name = client.getName();
                 model = new ClientsAllDataModel(id, name, fatherName, phone, leg, arm, chest, neck, front, back, date);
-                firebaseDatabase.getReference("Data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Clients").child(id).setValue(model);
-
-            } while (dataCursor.moveToNext());
-            {
-                Toast.makeText(getActivity(), "Data Backup Done", Toast.LENGTH_SHORT).show();
-                dataCursor.close();
+                firebaseDatabase.getReference("Data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Clients").child(id).setValue(model).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getActivity(), "Clients Backup Done", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-
+        }else{
+            Toast.makeText(getActivity(), "No Clients to Backup", Toast.LENGTH_SHORT).show();
         }
-        btnBackupOrder();
+        BackupOrder();
         progressDialog.dismiss();
         return;
 
     }
 
-    private void btnBackupOrder() {
-        OrderDataBaseHelper helper = new OrderDataBaseHelper(getActivity());
-        Cursor cursor = helper.GetAllData();
-        if (cursor.moveToFirst()) {
-            do {
-                final String orderID = cursor.getString(0);
-                final String clientID = cursor.getString(1);
-                final String name = cursor.getString(2);
-                final String price = cursor.getString(3);
-                final String type = cursor.getString(4);
-                final String dateOrdered = cursor.getString(5);
-                final String dateDelivered = cursor.getString(6);
-                final String status = cursor.getString(7);
-                final String furtherDetails = cursor.getString(8);
+    private void BackupOrder() {
+        orderViewModel.getAllOrders().observe(getActivity(), orders -> {
+            if (orders != null) {
+                for (Order order : orders) {
+                    order_list.add(order);
+                }
+            }
+        });
+        if (order_list.size() > 0) {
+            for (Order order : order_list) {
+                final String orderID = Integer.toString(order.getORDER_ID());
+                final String clientID = order.getCLIENT_ID();
+                final String name = order.getNAME();
+                final String price = order.getPRICE();
+                final String type = order.getTYPE();
+                final String dateOrdered = order.getDATE_ORDERED();
+                final String dateDelivered = order.getDATE_RECEIVED();
+                final String status = order.getSTATUS();
+                final String furtherDetails = order.getFURTHER_DETAILS();
                 OrderDataBackupModel model = new OrderDataBackupModel(orderID, clientID, name, type, price, dateOrdered, dateDelivered, status, furtherDetails);
                 firebaseDatabase.getReference("Data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Orders").child(orderID).setValue(model);
-            } while (cursor.moveToNext());
-            {
-                cursor.close();
             }
+            Toast.makeText(getActivity(), "Orders Backup Done", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "No Orders to Backup", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private Cursor fetchData() {
-        DatabaseHelper db = new DatabaseHelper(getActivity());
-        Cursor cursor = db.getAllData();
-        return cursor;
     }
 
 
@@ -253,6 +299,7 @@ public class BackupFragment extends Fragment {
 
             return true;
         } catch (IOException e) {
+
 
             return false;
         }

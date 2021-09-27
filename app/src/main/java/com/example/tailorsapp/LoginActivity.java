@@ -2,23 +2,22 @@ package com.example.tailorsapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tailorsapp.Database.UserDatabaseHelper;
+import com.example.tailorsapp.RoomDataBase.User;
+import com.example.tailorsapp.RoomDataBase.UserViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,19 +28,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-
-public class LoginActivirty extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private TextView btnToSignUp;
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
     private Button btnLogin;
     private EditText email,password;
-    private SharedPreferences sharedPreferences;
-    private UserDatabaseHelper user_db;
+    private UserViewModel userViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,21 +46,21 @@ public class LoginActivirty extends AppCompatActivity {
         password=findViewById(R.id.etPassword);
         ProgressDialog progressDialog=new ProgressDialog(this);
         firebaseDatabase=FirebaseDatabase.getInstance();
-        user_db =new UserDatabaseHelper(LoginActivirty.this);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         
         
         btnToSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivirty.this,SignupActivity.class));
+                startActivity(new Intent(LoginActivity.this,SignupActivity.class));
                 finish();
             }
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!networkConnected(LoginActivirty.this)) {
-                    Toast.makeText(LoginActivirty.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                if (!networkConnected(LoginActivity.this)) {
+                    Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String strEmail=email.getText().toString();
@@ -100,12 +93,12 @@ public class LoginActivirty extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                     progressDialog.dismiss();
-                                    startActivity(new Intent(LoginActivirty.this,MainActivity.class));
-                                    Toast.makeText(LoginActivirty.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
                                 else{
-                                    Toast.makeText(LoginActivirty.this, "Login failed please check your  credentials", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Login failed please check your  credentials", Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
                                 }
                             }
@@ -136,20 +129,12 @@ public class LoginActivirty extends AppCompatActivity {
                 String name = snapshot.child("name").getValue(String.class);
                 String email = snapshot.child("email").getValue(String.class);
 
-                if (!(user_db == null)) {
-                    Cursor cursor = user_db.getAllData();
-                    if (cursor.getCount() > 0) {
-                        user_db.EditIntoTable("1", name, email, "0", "0");
-                    } else {
-                        user_db.InsertIntoTable("1", name, email, "0", "0");
-                    }
-                    cursor.close();
-                }
+                userViewModel.insertOrder(new User(mAuth.getCurrentUser().getUid(),name,email,"0","0"));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(LoginActivirty.this, error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

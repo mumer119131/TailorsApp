@@ -1,4 +1,4 @@
-package com.example.tailorsapp;
+package com.example.tailorsapp.MenuFragments;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.tailorsapp.Database.DatabaseHelper;
+import com.example.tailorsapp.R;
 import com.example.tailorsapp.RoomDataBase.Client;
 import com.example.tailorsapp.RoomDataBase.ClientViewModel;
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,7 +24,6 @@ import java.util.Date;
 public class AddFragment extends Fragment {
     private TextInputEditText etName,etPhone,etFather,etLeg,etArm,etChest,etNeck,etFrontSide,etBackSide;
     private Button btnSave;
-    private DatabaseHelper databaseHelper;
     private String currentDate;
     private ClientViewModel clientViewModel;
 
@@ -44,7 +43,6 @@ public class AddFragment extends Fragment {
         btnSave=root.findViewById(R.id.btnToSave);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         currentDate = sdf.format(new Date());
-        databaseHelper=new DatabaseHelper(getActivity());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
 

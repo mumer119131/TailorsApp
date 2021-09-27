@@ -6,45 +6,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tailorsapp.Database.UserDatabaseHelper;
 import com.example.tailorsapp.PersonModel.PersonModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.regex.Pattern;
 
 public class SignupActivity extends AppCompatActivity {
     private TextView btnToLogin;
     private EditText name,email,pass,confirmPass;
     private Button signupBtn;
     private FirebaseAuth mAUTH;
-    private UserDatabaseHelper user_db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +46,6 @@ public class SignupActivity extends AppCompatActivity {
         confirmPass=findViewById(R.id.etSignUpConfirmPassword);
         signupBtn=findViewById(R.id.btnSignup);
         mAUTH=FirebaseAuth.getInstance();
-        user_db = new UserDatabaseHelper(this);
         ProgressDialog progressDialog=new ProgressDialog(this);
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
         btnToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignupActivity.this,LoginActivirty.class));
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -126,7 +114,7 @@ public class SignupActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                startActivity(new Intent(SignupActivity.this,LoginActivirty.class));
+                                                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
 
                                                 Toast.makeText(SignupActivity.this, "SignUp Successful", Toast.LENGTH_SHORT).show();
                                                 Toast.makeText(SignupActivity.this, "Login to your account", Toast.LENGTH_SHORT).show();

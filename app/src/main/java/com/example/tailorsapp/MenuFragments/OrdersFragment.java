@@ -1,4 +1,4 @@
-package com.example.tailorsapp;
+package com.example.tailorsapp.MenuFragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.tailorsapp.Adapter.SectionPagerAdapter;
+import com.example.tailorsapp.AddOrder.AddOrder;
+import com.example.tailorsapp.FragmentCompletedOrders;
+import com.example.tailorsapp.PendingOrdersFragment;
+import com.example.tailorsapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -34,7 +38,7 @@ public class OrdersFragment extends Fragment {
         addOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),AddOrder.class));
+                startActivity(new Intent(getActivity(), AddOrder.class));
             }
         });
 

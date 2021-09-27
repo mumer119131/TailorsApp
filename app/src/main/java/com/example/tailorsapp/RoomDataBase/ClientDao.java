@@ -26,7 +26,7 @@ public interface ClientDao {
     @Query("DELETE FROM clients_table")
     void deleteAllClients();
 
-    @Query("UPDATE CLIENTS_TABLE SET userName =:name ,fathername= :father, phoneNumber= :phone, leg= :leg, arm = :arm, chest=:chest, neck=:neck, frontSide=:front,backSide=:back,date=:date WHERE userID= :userID")
+    @Query("UPDATE CLIENTS_TABLE SET userName =:name ,fatherName= :father, phoneNumber= :phone, leg= :leg, arm = :arm, chest=:chest, neck=:neck, frontSide=:front,backSide=:back,date=:date WHERE userID= :userID")
     void updateClientData(int userID,String name,String father, String phone, String leg, String arm, String chest, String neck, String front,String back,String date);
 
 
